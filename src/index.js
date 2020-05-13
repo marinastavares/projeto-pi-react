@@ -6,22 +6,33 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 import promiseMiddleware from 'redux-promise-middleware'
+import { ThemeProvider } from '@material-ui/styles'
+import { Router } from '@reach/router'
+
+import theme from 'styles/material-ui'
+import rootReducer from 'modules/reducers'
+import App from 'views/app'
+import LandingPage from 'views/landing'
+
+import * as serviceWorker from './serviceWorker'
 import './index.css'
 
-import rootReducer from './modules/reducers'
-import App from './views/app'
-import * as serviceWorker from './serviceWorker'
-
 const store = createStore(
-	rootReducer,
-	composeWithDevTools(applyMiddleware(thunk, promiseMiddleware, logger)),
+  rootReducer,
+  composeWithDevTools(applyMiddleware(thunk, promiseMiddleware, logger))
 )
 
 ReactDOM.render(
-	<Provider store={store}>
-		<App />
-	</Provider>,
-	document.getElementById('root'),
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <App path="/">
+          <LandingPage path="/" />
+        </App>
+      </Router>
+    </ThemeProvider>
+  </Provider>,
+  document.getElementById('root')
 )
 
 // If you want your app to work offline and load faster, you can change
