@@ -12,7 +12,7 @@ const LandingPage = () => {
       <Grid container justify="center" alignItems="flex-end">
         {/* <img className={styles.logo} alt="logo" src={colagem} /> */}
         <Grid xs={4} alignItems="center" container>
-          {/* <img alt="Lá da rua" src={logo} /> */}
+          {/* <img alt="LMM - now" src={logo} /> */}
           <Typography className={styles.title} component="h1" variant="h2">
             Microempreendedores da minha, da sua e das nossas ruas
           </Typography>
