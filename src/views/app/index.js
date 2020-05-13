@@ -23,11 +23,6 @@ const App = ({ children }) => {
           <Link component={RouterLink} className={styles.link} to="/">
             LMM
           </Link>
-          <Grid direction="row" justify="flex-end" container>
-            <Link component={RouterLink} className={styles.link} to="/">
-              Início
-            </Link>
-          </Grid>
         </Toolbar>
       </AppBar>
       <Grid className={styles.content}>{children}</Grid>

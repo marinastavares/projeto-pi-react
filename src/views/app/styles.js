@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 
-export default makeStyles((theme) => ({
+export default makeStyles(() => ({
   container: {
     width: '100vw',
     height: '100%',
@@ -10,12 +10,11 @@ export default makeStyles((theme) => ({
     backgroundColor: 'rgba(0,0,0, 0,5)',
   },
   content: {
-    marginTop: 80,
     width: '100%',
   },
   link: {
     textDecoration: 'none',
-    color: theme.palette.secondary.main,
+    color: 'white',
     textTransform: 'uppercase',
     fontSize: 28,
     fontWeight: 'bold',

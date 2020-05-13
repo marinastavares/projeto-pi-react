@@ -3,16 +3,16 @@ import { createMuiTheme } from '@material-ui/core/styles'
 export default createMuiTheme({
   palette: {
     primary: {
-      main: '#083787',
+      main: '#0072A2',
     },
     secondary: {
-      main: '#fff',
+      main: '#000',
     },
     custom: {
       pink: '#DC8474',
       blue: '#83B4BB',
       green: '#ADC26D',
-      yellow: '#F6F193',
+      yellow: '#72A200',
     },
     background: {
       default: 'white',
@@ -31,11 +31,12 @@ export default createMuiTheme({
       color: '#F79C84',
     },
     h3: {
-      fontSize: '14px',
+      fontSize: '24px',
       lineHeight: '1.5',
       color: '#BA6D45',
       textAlign: 'justify',
       fontFamily: 'Staatliches, cursive',
+      marginBottom: '16px',
     },
     h4: {
       fontSize: '14px',
