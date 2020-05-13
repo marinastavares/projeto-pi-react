@@ -4,9 +4,9 @@ export default makeStyles((theme) => ({
   container: {
     display: 'grid',
     gridTemplateRows: 'repeat(2, auto)',
-    gridTemplateColumns: '1fr',
     gridGap: '52px',
     alignItems: 'center',
+    width: '100%',
   },
   title: {
     fontWeight: 'bold',
@@ -18,6 +18,7 @@ export default makeStyles((theme) => ({
   firstSection: {
     backgroundColor: theme.palette.custom.yellow,
     padding: theme.spacing(5),
+    boxSizing: 'border-box',
     width: '100%',
   },
   charts: {
