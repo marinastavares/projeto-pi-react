@@ -15,10 +15,11 @@ export default makeStyles((theme) => ({
   },
   link: {
     textDecoration: 'none',
-    color: theme.palette.primary.main,
+    color: theme.palette.secondary.main,
     textTransform: 'uppercase',
     fontSize: 28,
     fontWeight: 'bold',
     margin: '0 16px',
+    fontFamily: 'Staatliches',
   },
 }))

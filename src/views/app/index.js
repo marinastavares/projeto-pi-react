@@ -13,9 +13,11 @@ const App = ({ children }) => {
 
   return (
     <Grid container className={styles.container}>
-      <AppBar color="secondary" position="static" className={styles.header}>
+      <AppBar color="primary" position="static" className={styles.header}>
         <Toolbar>
-          <RouterLink to="/">LMM</RouterLink>
+          <Link component={RouterLink} className={styles.link} to="/">
+            LMM
+          </Link>
           <Grid direction="row" justify="flex-end" container>
             <Link component={RouterLink} className={styles.link} to="/">
               Início

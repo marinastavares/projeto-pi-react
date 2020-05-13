@@ -1,12 +1,12 @@
 body {
   margin: 0;
-  font-family: 'Fjalla One', 'Oswal';
+  font-family: 'Staatliches', 'cursive';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: 'Fjalla One', 'Oswal';
+  font-family: 'Staatliches', 'cursive';
 }
 
 html,
@@ -144,4 +144,3 @@ table {
 :global(#react-aria-modal-dialog) {
   display: block !important;
 }
-
