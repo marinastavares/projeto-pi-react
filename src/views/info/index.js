@@ -22,7 +22,7 @@ import { useModal, useResizer } from 'utils/hooks'
 import DialogTime from './modal'
 import useStyles from './styles'
 
-const LandingPage = () => {
+const Info = () => {
   const styles = useStyles()
   const { voltage } = useSelector(({ name }) => name.module1)
   const [open, toggle] = useModal()
@@ -91,4 +91,4 @@ const LandingPage = () => {
   )
 }
 
-export default React.memo(LandingPage)
+export default React.memo(Info)

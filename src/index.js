@@ -13,6 +13,7 @@ import theme from 'styles/material-ui'
 import rootReducer from 'modules/reducers'
 import App from 'views/app'
 import LandingPage from 'views/landing'
+import Info from 'views/info'
 
 import * as serviceWorker from './serviceWorker'
 import './index.css'
@@ -28,6 +29,7 @@ ReactDOM.render(
       <Router>
         <App path="/">
           <LandingPage path="/" />
+          <Info path="/modulo" />
         </App>
       </Router>
     </ThemeProvider>
