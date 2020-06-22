@@ -2,33 +2,29 @@ import { makeStyles } from '@material-ui/core/styles'
 
 export default makeStyles((theme) => ({
   container: {
-    display: 'grid',
-    gridTemplateRows: 'repeat(2, auto)',
-    gridGap: '52px',
-    alignItems: 'center',
     width: '100%',
+    padding: '60px 180px',
+
+    [theme.breakpoints.down('sm')]: {
+      padding: '60px 20px',
+    },
   },
   title: {
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    fontSize: '36px',
-    color: 'white',
-    textAlign: 'center',
-  },
-  firstSection: {
-    backgroundColor: theme.palette.custom.yellow,
-    padding: theme.spacing(5),
-    boxSizing: 'border-box',
-    width: '100%',
-  },
-  charts: {
-    margin: '0 auto',
-    padding: '16px',
+    fontSize: '32px',
+    marginRight: 'auto',
   },
   cardTitle: {
-    marginLeft: '12px',
+    fontSize: '16px',
+    textAlign: 'left',
   },
-  button: {
-    marginRight: '14px',
+  value: {
+    fontWeight: '500',
+    fontSize: '24px',
+    textAlign: 'center',
+    margin: '0 auto',
+  },
+  card: {
+    padding: theme.spacing(3),
+    marginBottom: theme.spacing(4),
   },
 }))

@@ -10,66 +10,62 @@ const INITIAL_STATE = {
       {
         createdAt: '09:01',
         value: '255',
+        current: 1,
+        potency: 110,
       },
       {
         createdAt: '09:02',
         value: '255.1',
+        current: 1.2,
+        potency: 110,
       },
       {
         createdAt: '09:03',
         value: '254',
+        current: 0.8,
+        potency: 112,
       },
       {
         createdAt: '09:04',
         value: '256',
+        current: 0.6,
+        potency: 119,
       },
       {
         createdAt: '09:05',
         value: '255',
+        current: 1,
+        potency: 120,
       },
       {
         createdAt: '09:06',
         value: '255.1',
+        current: 1.2,
+        potency: 119,
       },
       {
         createdAt: '09:07',
         value: '254',
+        current: 1.1,
+        potency: 150,
       },
       {
         createdAt: '09:08',
         value: '256',
+        current: 0.9,
+        potency: 111,
       },
       {
         createdAt: '09:09',
         value: '255',
+        current: 1.1,
+        potency: 117,
       },
       {
         createdAt: '09:10',
         value: '255.1',
-      },
-      {
-        createdAt: '09:11',
-        value: '254',
-      },
-      {
-        createdAt: '09:12',
-        value: '256',
-      },
-      {
-        createdAt: '09:13',
-        value: '255',
-      },
-      {
-        createdAt: '09:14',
-        value: '255.1',
-      },
-      {
-        createdAt: '09:15',
-        value: '254',
-      },
-      {
-        createdAt: '09:16',
-        value: '256',
+        current: 1.1,
+        potency: 117,
       },
     ],
   },

@@ -1,21 +1,13 @@
-import React, { useCallback } from 'react'
+import React, { useMemo } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import { useSelector } from 'react-redux'
-import {
-  LineChart,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-} from 'recharts'
 import Card from '@material-ui/core/Card'
-import AccessTimeIcon from '@material-ui/icons/AccessTime'
-import IconButton from '@material-ui/core/IconButton'
+// import AccessTimeIcon from '@material-ui/icons/AccessTime'
+// import IconButton from '@material-ui/core/IconButton'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import { Link as RouterLink } from '@reach/router'
+import ReactApexChart from 'react-apexcharts'
 
 import { useModal, useResizer } from 'utils/hooks'
 
@@ -28,7 +20,66 @@ const LandingPage = () => {
   const [open, toggle] = useModal()
   const isMobile = useResizer()
 
-  const onToggleClick = useCallback(() => toggle(), [toggle])
+  const series = useMemo(
+    () => [
+      {
+        name: 'Tensão',
+        data: voltage?.map((value) => Number(value.value)),
+      },
+      {
+        name: 'Corrente',
+        data: voltage?.map((value) => Number(value.current)),
+      },
+      {
+        name: 'Potência',
+        data: voltage?.map((value) => Number(value.potency)),
+      },
+    ],
+    [voltage?.map]
+  )
+
+  const options = useMemo(
+    () => ({
+      chart: {
+        type: 'line',
+        stacked: false,
+        height: 500,
+        width: 300,
+        zoom: {
+          type: 'x',
+          enabled: true,
+          autoScaleYaxis: true,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      markers: {
+        size: 0,
+      },
+      title: {
+        text: 'Módulo 1',
+        align: 'left',
+      },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 1,
+          inverseColors: false,
+          opacityFrom: 0.5,
+          opacityTo: 0,
+          stops: [0, 90, 100],
+        },
+      },
+      xaxis: {
+        categories: voltage?.map((value) => value.createdAt),
+      },
+      tooltip: {
+        shared: false,
+      },
+    }),
+    []
+  )
 
   return (
     <Grid className={styles.container}>
@@ -53,40 +104,26 @@ const LandingPage = () => {
             >
               Modulo 1
             </Typography>
-            <IconButton
+            {/* <IconButton
               className={styles.button}
               edge="end"
               color="primary"
               aria-label="menu"
-              onClick={onToggleClick}
+              onClick={toggle}
             >
               <AccessTimeIcon fontSize="36px" />
-            </IconButton>
+            </IconButton> */}
           </Grid>
-          <LineChart
-            width={isMobile ? 250 : 600}
-            height={isMobile ? 150 : 300}
-            data={voltage}
-            margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
-          >
-            <Line
-              type="monotone"
-              name="Tensão"
-              dataKey="value"
-              stroke="#8884d8"
-            />
-            <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-            <XAxis fontFamily="Roboto, sans-serif" dataKey="createdAt" />
-            <YAxis
-              fontFamily="Roboto, sans-serif"
-              domain={['dataMin - 5', 'dataMax + 5']}
-            />
-            <Legend />
-            <Tooltip />
-          </LineChart>
         </CardActionArea>
+        <ReactApexChart
+          options={options}
+          series={series}
+          type="area"
+          height={350}
+          width={isMobile ? 300 : 500}
+        />
       </Card>
-      {open && <DialogTime open={open} handleClose={onToggleClick} />}
+      {open && <DialogTime open={open} handleClose={toggle} />}
     </Grid>
   )
 }
