@@ -78,7 +78,7 @@ const LandingPage = () => {
         shared: false,
       },
     }),
-    []
+    [voltage?.map]
   )
 
   return (

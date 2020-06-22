@@ -108,7 +108,7 @@ const Info = () => {
         shared: false,
       },
     }),
-    []
+    [voltage?.map]
   )
 
   return (
