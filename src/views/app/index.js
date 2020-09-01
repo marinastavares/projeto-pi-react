@@ -14,15 +14,22 @@ const App = ({ children }) => {
   const styles = useStyles()
 
   return (
-    <Grid container className={styles.container}>
-      <AppBar color="primary" position="static" className={styles.header}>
+    <Grid className={styles.container}>
+      <AppBar color="primary" component="div">
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Link component={RouterLink} className={styles.link} to="/">
-            LMM
-          </Link>
+          <Grid
+            container
+            justify="space-between"
+            alignItems="center"
+            direction="column"
+          >
+            <Link component={RouterLink} className={styles.link} to="/">
+              LMM
+            </Link>
+            <IconButton edge="start" color="inherit" aria-label="menu">
+              <MenuIcon />
+            </IconButton>
+          </Grid>
         </Toolbar>
       </AppBar>
       <Grid className={styles.content}>{children}</Grid>

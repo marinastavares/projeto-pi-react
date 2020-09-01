@@ -1,16 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles'
 
 export default makeStyles(() => ({
-  container: {
-    width: '100vw',
-    height: '100%',
-    paddingBottom: '32px',
-  },
-  header: {
-    backgroundColor: 'rgba(0,0,0, 0,5)',
-  },
   content: {
     width: '100%',
+  },
+  container: {
+    display: 'flex',
   },
   link: {
     textDecoration: 'none',
@@ -20,5 +15,9 @@ export default makeStyles(() => ({
     fontWeight: 'bold',
     margin: '0 16px',
     fontFamily: 'Staatliches',
+  },
+  header: {
+    display: 'grid',
+    gridTemplateRows: '52px',
   },
 }))

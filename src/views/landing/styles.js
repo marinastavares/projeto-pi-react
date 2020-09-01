@@ -31,4 +31,9 @@ export default makeStyles((theme) => ({
   button: {
     marginRight: '14px',
   },
+  color: {
+    color: 'black',
+    fontFamily: 'Staatliches',
+    fontSize: '2.4rem',
+  },
 }))
