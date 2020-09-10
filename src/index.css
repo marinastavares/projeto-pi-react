@@ -1,12 +1,12 @@
 body {
   margin: 0;
-  font-family: 'Staatliches', 'cursive';
+  font-family: 'Nunito', 'cursive';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: 'Staatliches', 'cursive';
+  font-family: 'Nunito', 'cursive';
 }
 
 html,

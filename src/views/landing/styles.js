@@ -16,7 +16,7 @@ export default makeStyles((theme) => ({
     textAlign: 'center',
   },
   firstSection: {
-    backgroundColor: theme.palette.custom.yellow,
+    backgroundColor: '#222',
     padding: theme.spacing(5),
     boxSizing: 'border-box',
     width: '100%',

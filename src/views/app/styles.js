@@ -19,6 +19,5 @@ export default makeStyles(() => ({
     fontSize: 28,
     fontWeight: 'bold',
     margin: '0 16px',
-    fontFamily: 'Staatliches',
   },
 }))

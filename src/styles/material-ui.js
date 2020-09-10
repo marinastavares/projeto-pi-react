@@ -3,40 +3,34 @@ import { createMuiTheme } from '@material-ui/core/styles'
 export default createMuiTheme({
   palette: {
     primary: {
-      main: '#0072A2',
+      main: '#3751FF',
     },
     secondary: {
-      main: '#000',
+      main: '#DDE2FF',
+      dark: '#A4A6B3',
+      light: '#9FA2B4',
     },
-    custom: {
-      pink: '#DC8474',
-      blue: '#83B4BB',
-      green: '#ADC26D',
-      yellow: '#72A200',
+    text: {
+      primary: '#4F4F4F',
+      secondary: '#151522',
     },
-    background: {
-      default: 'white',
-    },
+    sidebar: '#363740',
+    divider: '#BDBDBD',
+    selected: '#E5E8FF',
+    background: '#F7F8FC',
   },
   typography: {
     h1: {
-      fontSize: '32px',
-      fontWeight: 'bold',
-      fontFamily: 'Staatliches, cursive',
+      fontSize: '36px',
+      fontWeight: 'normal',
+      fontFamily: 'Nunito',
     },
     h2: {
-      fontSize: '20px',
+      fontSize: '24px',
       fontWeight: '500',
-      fontFamily: 'Staatliches, cursive',
-      color: '#F79C84',
     },
     h3: {
-      fontSize: '24px',
-      lineHeight: '1.5',
-      color: '#BA6D45',
-      textAlign: 'justify',
-      fontFamily: 'Staatliches, cursive',
-      marginBottom: '16px',
+      fontSize: '20px',
     },
     h4: {
       fontSize: '14px',
@@ -54,8 +48,8 @@ export default createMuiTheme({
     },
   },
   root: {
-    backgroundColor: 'white',
-    fontFamily: 'Staatliches, cursive',
+    backgroundColor: '#F7F8FC',
+    fontFamily: 'Nunito',
     button: {
       textTransform: 'capitalize',
     },
