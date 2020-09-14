@@ -1,4 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles'
+import { fade } from '@material-ui/core/styles/colorManipulator'
 
 export default createMuiTheme({
   palette: {
@@ -14,10 +15,10 @@ export default createMuiTheme({
       primary: '#4F4F4F',
       secondary: '#151522',
     },
-    sidebar: '#363740',
-    divider: '#BDBDBD',
+    sidebar: '#20263C',
+    divider: fade('#9FA2B4', 0.3),
     selected: '#E5E8FF',
-    background: '#F7F8FC',
+    background: '#15192A',
   },
   typography: {
     h1: {
@@ -48,10 +49,11 @@ export default createMuiTheme({
     },
   },
   root: {
-    backgroundColor: '#F7F8FC',
+    backgroundColor: '#15192A',
     fontFamily: 'Nunito',
     button: {
       textTransform: 'capitalize',
+      minWidth: '40px',
     },
     input: {
       fontSize: '16px',
@@ -88,6 +90,9 @@ export default createMuiTheme({
       },
     },
     MuiButton: {
+      root: {
+        minWidth: '40px',
+      },
       containedPrimary: {
         color: 'white',
       },

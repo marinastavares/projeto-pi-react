@@ -11,8 +11,6 @@ import { Router } from '@reach/router'
 
 import theme from 'styles/material-ui'
 import rootReducer from 'modules/reducers'
-import App from 'views/app'
-import LandingPage from 'views/landing'
 import Dashboard from 'views/dashboard'
 import Info from 'views/info'
 
@@ -28,11 +26,9 @@ ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <Router>
-        <Dashboard path="dashboard" />
-        <App path="/">
-          <LandingPage path="/" />
+        <Dashboard path="/">
           <Info path="/modulo" />
-        </App>
+        </Dashboard>
       </Router>
     </ThemeProvider>
   </Provider>,

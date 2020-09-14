@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { fade } from '@material-ui/core/styles/colorManipulator'
 
 export default makeStyles(({ palette }) => ({
   container: {
@@ -10,65 +9,38 @@ export default makeStyles(({ palette }) => ({
     fontFamily: 'Nunito',
     backgroundColor: palette.background,
   },
-  logo: {
-    marginLeft: '1.6rem',
-    marginBottom: '1.6rem',
+  content: {
+    display: 'grid',
+    gridTemplateRows: '45px 1fr',
+    padding: 56,
   },
-  header: {
-    backgroundColor: palette.sidebar,
-  },
-  icon: {
-    backgroundColor: palette.primary.main,
-    height: '32px',
-    width: '32px',
-    borderRadius: '50%',
+  title: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    lineHeight: 2,
   },
-  flash: {
-    color: palette.selected,
+  iconHeader: {
+    height: '36px',
+    width: '36px',
+    marginRight: '16px',
   },
-  link: {
-    marginLeft: '16px',
-    color: palette.selected,
-    fontWeight: 'bold',
-    fontSize: 30,
-    textDecoration: 'none',
-    marginTop: '0.2rem',
-    '&:hover': {
-      textDecoration: 'none',
+  dividerHeader: {
+    backgroundColor: palette.secondary.main,
+    width: '40vw',
+  },
+  headerButton: {
+    width: '40px',
+    height: '40px',
+    border: `2.5px solid ${palette.secondary.main}`,
+  },
+  menu: {
+    '& .MuiMenuItem-root': {
+      backgroundColor: 'white',
     },
   },
-  toolbar: {
-    display: 'grid',
-    gridTemplateRows: 'auto',
-    paddingTop: '2.4rem',
-  },
-  item: {
-    color: palette.secondary.dark,
-    paddingRight: '3.2rem',
-    textTransform: 'capitalize',
-    height: '56px',
-    '&:hover': {
-      color: palette.secondary.main,
-      backgroundColor: fade(palette.secondary.light, 0.4),
-      borderLeft: `0.2rem solid ${palette.secondary.main}`,
-    },
-    '& .MuiButton-startIcon': {
-      marginRight: '1.6rem',
-      marginLeft: 8,
-    },
-  },
-  selected: {
-    color: palette.secondary.main,
-    backgroundColor: fade(palette.secondary.light, 0.4),
-    borderLeft: `0.2rem solid ${palette.secondary.main}`,
-  },
-  button: {
-    display: 'grid',
-    gridTemplateColumns: '20px 100px',
-    gap: '16px',
-    alignItems: 'center',
+  selectButton: {
+    border: `2.5px solid ${palette.secondary.main}`,
+    fontWeight: '500',
+    height: '40px',
   },
 }))
