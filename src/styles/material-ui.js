@@ -21,6 +21,7 @@ export default createMuiTheme({
     background: '#15192A',
   },
   typography: {
+    fontFamily: 'Nunito',
     h1: {
       fontSize: '36px',
       fontWeight: 'normal',
@@ -29,9 +30,11 @@ export default createMuiTheme({
     h2: {
       fontSize: '24px',
       fontWeight: '500',
+      fontFamily: 'Nunito',
     },
     h3: {
       fontSize: '20px',
+      fontFamily: 'Nunito',
     },
     h4: {
       fontSize: '14px',
@@ -58,9 +61,31 @@ export default createMuiTheme({
     input: {
       fontSize: '16px',
       appearance: 'none',
+      fontFamily: 'Nunito',
     },
   },
   overrides: {
+    MuiSelect: {
+      root: {
+        fontFamily: 'Nunito',
+      },
+    },
+    MuiPaper: {
+      root: {
+        fontFamily: 'Nunito',
+        backgroundColor: '#20263C',
+        borderColor: '#DDE2FF',
+      },
+      outlined: {
+        borderColor: '#DDE2FF',
+        backgroundColor: '#20263C',
+      },
+    },
+    MuiMenuItem: {
+      root: {
+        fontFamily: 'Nunito',
+      },
+    },
     MuiDialogTitle: {
       root: {
         fontSize: '2px',
@@ -73,6 +98,9 @@ export default createMuiTheme({
       },
     },
     MuiTypography: {
+      root: {
+        fontFamily: 'Nunito',
+      },
       body1: {
         fontSize: '16px',
         lineHeight: '1.5',
@@ -91,6 +119,7 @@ export default createMuiTheme({
     },
     MuiButton: {
       root: {
+        fontFamily: 'Nunito',
         minWidth: '40px',
       },
       containedPrimary: {

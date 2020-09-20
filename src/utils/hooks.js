@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
 export const useModal = (initialMode = false) => {
   const [modalOpen, setModalOpen] = useState(initialMode)
@@ -23,4 +24,26 @@ export const useResizer = () => {
   }, [isMobile, handleSizeChange])
 
   return isMobile
+}
+
+export const usePrevious = (value) => {
+  const ref = useRef()
+
+  useEffect(() => {
+    ref.current = value
+  }, [value])
+
+  return ref.current
+}
+
+export const useOnSuccessCall = (action, onSuccess) => {
+  const isLoading = useSelector((state) => !!state.loading[action])
+  const wasLoading = usePrevious(isLoading)
+  const error = useSelector((state) => state.error[action])
+  useEffect(() => {
+    if (!isLoading && wasLoading && !error.length) {
+      onSuccess()
+    }
+  })
+  return [isLoading, error]
 }

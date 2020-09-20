@@ -12,6 +12,7 @@ export default makeStyles(({ palette }) => ({
   content: {
     display: 'grid',
     gridTemplateRows: '45px 1fr',
+    gridRowGap: '56px',
     padding: 56,
   },
   title: {

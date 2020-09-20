@@ -12,6 +12,7 @@ import promise from 'redux-promise-middleware'
 import theme from 'styles/material-ui'
 import rootReducer from 'modules/reducers'
 import App from 'views/app'
+import General from 'views/general'
 import Info from 'views/info'
 
 import * as serviceWorker from './serviceWorker'
@@ -40,6 +41,7 @@ ReactDOM.render(
       <Router>
         <App path="/">
           <Info path="/modulo" />
+          <General path="/" />
         </App>
       </Router>
     </ThemeProvider>

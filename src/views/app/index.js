@@ -7,23 +7,13 @@ import PropTypes from 'prop-types'
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
 import MenuItem from '@material-ui/core/MenuItem'
 import subDays from 'date-fns/subDays'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { getLabs, setQuery } from 'modules/labs/actions'
+import { menuSelector } from 'modules/labs/selectors'
 
 import useStyles from './styles'
 import Navbar from './navbar'
-
-const TEST_ESP = [
-  {
-    name: 'Porta',
-    route: '/esp-1',
-  },
-  {
-    name: 'Corredor',
-    route: '/esp-2',
-  },
-]
 
 const transformDate = (difference) =>
   `initialDate=${new Date().toISOString()}&finalDate=${subDays(
@@ -62,15 +52,19 @@ const App = ({ children }) => {
   const styles = useStyles()
   const location = useLocation()
   const [selectDate, setDate] = useState('')
+  const menuItems = useSelector(menuSelector)
   const dispatch = useDispatch()
 
-  const handleClick = useCallback((event) => {
-    setDate(event.target.value)
-    dispatch(setQuery(event.target.value))
-  }, [])
+  const handleClick = useCallback(
+    (event) => {
+      setDate(event.target.value)
+      dispatch(setQuery(event.target.value))
+    },
+    [dispatch]
+  )
 
   const currentHeader = useMemo(() => {
-    const pathname = TEST_ESP.find((esp) => esp.route === location.pathname)
+    const pathname = menuItems?.find((esp) => esp.route === location.pathname)
     if (pathname) {
       return {
         icon: <EmojiObjectsIcon className={styles.iconHeader} />,
@@ -81,7 +75,7 @@ const App = ({ children }) => {
       icon: <DashboardIcon className={styles.iconHeader} color="secondary" />,
       title: 'Dashboard',
     }
-  }, [location.pathname, styles.iconHeader])
+  }, [location.pathname, menuItems?.find, styles.iconHeader])
 
   useEffect(() => {
     dispatch(getLabs())
@@ -89,7 +83,7 @@ const App = ({ children }) => {
 
   return (
     <Grid container className={styles.container}>
-      <Navbar />
+      <Navbar menuItems={menuItems} />
       <Grid className={styles.content}>
         <Grid className={styles.header}>
           <Grid>
@@ -134,7 +128,7 @@ const App = ({ children }) => {
             </Grid>
           </Grid>
         </Grid>
-        {children}
+        {menuItems.length && <Grid container>{children}</Grid>}
       </Grid>
     </Grid>
   )

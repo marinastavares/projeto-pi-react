@@ -11,21 +11,11 @@ import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects'
 import FlashOnIcon from '@material-ui/icons/FlashOn'
 import classnames from 'classnames'
 import SettingsIcon from '@material-ui/icons/Settings'
+import PropTypes from 'prop-types'
 
 import useStyles from './styles'
 
-const TEST_ESP = [
-  {
-    name: 'Porta',
-    route: '/esp-1',
-  },
-  {
-    name: 'Corredor',
-    route: '/esp-2',
-  },
-]
-
-const Navbar = () => {
+const Navbar = ({ menuItems }) => {
   const styles = useStyles()
   const location = useLocation()
 
@@ -46,9 +36,9 @@ const Navbar = () => {
         </Grid>
         <Button
           component={RouterLink}
-          to="/dashboard"
+          to="/"
           className={classnames(styles.item, {
-            [styles.selected]: isSelected('/dashboard'),
+            [styles.selected]: isSelected('/'),
           })}
         >
           <Grid className={styles.button}>
@@ -56,7 +46,7 @@ const Navbar = () => {
             Dashboard
           </Grid>
         </Button>
-        {TEST_ESP.map((esp) => (
+        {menuItems?.map((esp) => (
           <Button
             key={esp.name}
             component={RouterLink}
@@ -87,6 +77,10 @@ const Navbar = () => {
       </Toolbar>
     </AppBar>
   )
+}
+
+Navbar.propTypes = {
+  menuItems: PropTypes.arrayOf().isRequired,
 }
 
 export default React.memo(Navbar)
