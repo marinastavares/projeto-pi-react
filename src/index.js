@@ -5,30 +5,42 @@ import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
-import promiseMiddleware from 'redux-promise-middleware'
 import { ThemeProvider } from '@material-ui/styles'
 import { Router } from '@reach/router'
+import promise from 'redux-promise-middleware'
 
 import theme from 'styles/material-ui'
 import rootReducer from 'modules/reducers'
-import Dashboard from 'views/dashboard'
+import App from 'views/app'
 import Info from 'views/info'
 
 import * as serviceWorker from './serviceWorker'
 import './index.css'
 
+const errorMiddleware = () => {
+  return (next) => (action) => {
+    const result = next(action)
+
+    if (!(result instanceof Promise)) {
+      return action
+    }
+
+    return result.catch(() => {})
+  }
+}
 const store = createStore(
   rootReducer,
-  composeWithDevTools(applyMiddleware(thunk, promiseMiddleware, logger))
+  composeWithDevTools(
+    applyMiddleware(...[thunk, errorMiddleware, promise], logger)
+  )
 )
-
 ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <Router>
-        <Dashboard path="/">
+        <App path="/">
           <Info path="/modulo" />
-        </Dashboard>
+        </App>
       </Router>
     </ThemeProvider>
   </Provider>,
