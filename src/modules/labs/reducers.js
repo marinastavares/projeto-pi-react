@@ -15,8 +15,8 @@ const labs = createReducer(INITIAL_STATE, {
     produce(state, (previousState) => {
       // eslint-disable-next-line no-param-reassign
       previousState.names = payload.map((values) => ({
-        name: values.name.toUpperCase(),
-        route: `/${values.name}`,
+        name: values.slug.toUpperCase(),
+        route: `/${values.slug}`,
       }))
     }),
   [SET_QUERY]: (state, { payload }) =>

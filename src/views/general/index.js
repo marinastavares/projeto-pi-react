@@ -71,7 +71,7 @@ const GeneralView = () => {
           animate
         />
         <Typography component="p" variant="h1" color="secondary">
-          {mostUsed[0]?.title.toUpperCase()}
+          {mostUsed[0]?.title?.toUpperCase()}
         </Typography>
       </CardInfo>
       <CardInfo
@@ -86,7 +86,7 @@ const GeneralView = () => {
       </CardInfo>
       <CardInfo
         title="Pico de corrente"
-        isLoading={!peakCurrent.name}
+        isLoading={!peakCurrent.lab}
         containerClassName={styles.peak}
       >
         <PieChart
@@ -110,12 +110,14 @@ const GeneralView = () => {
             fontFamily: 'Nunito',
             fill: '#DDE2FF',
           }}
+          animate
+          rounded
         />
         <Typography component="span" variant="h5" color="secondary">
           {peakCurrent.date && format(new Date(peakCurrent.date), 'dd/M hh:mm')}
         </Typography>
         <Typography component="p" variant="h4" color="secondary">
-          {peakCurrent?.name?.toUpperCase()}
+          {peakCurrent?.lab?.toUpperCase()}
         </Typography>
       </CardInfo>
     </Grid>

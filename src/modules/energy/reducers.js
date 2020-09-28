@@ -19,7 +19,7 @@ const energy = createReducer(INITIAL_STATE, {
     }),
   [GET_ENERGY_AVERAGE.FULFILLED]: (state, { payload }) =>
     produce(state, (previousState) => {
-      previousState.avg = payload[0].avgEnergy
+      previousState.avg = payload.avgEnergy
     }),
   [GET_PEAK_CURRENT.FULFILLED]: (state, { payload }) =>
     produce(state, (previousState) => {
