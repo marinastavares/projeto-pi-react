@@ -39,11 +39,11 @@ export const usePrevious = (value) => {
 export const useOnSuccessCall = (action, onSuccess) => {
   const isLoading = useSelector((state) => !!state.loading[action])
   const wasLoading = usePrevious(isLoading)
-  const error = useSelector((state) => state.error[action])
+
   useEffect(() => {
-    if (!isLoading && wasLoading && !error.length) {
+    if (!isLoading && wasLoading) {
       onSuccess()
     }
   })
-  return [isLoading, error]
+  return [isLoading]
 }

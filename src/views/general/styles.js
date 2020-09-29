@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/styles'
 export default makeStyles(() => ({
   container: {
     display: 'grid',
-    gridTemplateAreas: "'more energy peak'",
-    gridTemplateRows: 'repeat(3, 200px)',
+    gridTemplateAreas: "'more energy peak' 'graph graph other'",
+    gridTemplateRows: 'repeat(3, 250px)',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '24px',
   },
@@ -32,5 +32,8 @@ export default makeStyles(() => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  graph: {
+    gridArea: 'graph',
   },
 }))

@@ -21,3 +21,4 @@ export const peakCurrentLoading = (state) =>
   state.loading[GET_PEAK_CURRENT.ACTION]
 export const averageSelector = (state) => state.energy.avg
 export const peakCurrentSelector = (state) => state.energy.peakCurrent
+export const energySelector = (state) => state.energy

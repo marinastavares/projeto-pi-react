@@ -7,6 +7,7 @@ const REQUEST = ['PENDING', 'FULFILLED', 'REJECTED', 'COUNT']
 export const GET_ENERGY = defineAction('GET_ENERGY', REQUEST)
 export const GET_ENERGY_AVERAGE = defineAction('GET_ENERGY_AVERAGE', REQUEST)
 export const GET_PEAK_CURRENT = defineAction('GET_PEAK_CURRENT', REQUEST)
+export const GET_SUM_HOUR = defineAction('GET_SUM_HOUR', REQUEST)
 
 export const getMostEnergy = () => (dispatch, getState) => {
   dispatch({
@@ -26,5 +27,12 @@ export const getPeakCurrent = () => (dispatch, getState) => {
   dispatch({
     type: GET_PEAK_CURRENT.ACTION,
     payload: energyService.getPeakCurrent(getState().labs.query),
+  })
+}
+
+export const getSumHour = () => (dispatch, getState) => {
+  dispatch({
+    type: GET_SUM_HOUR.ACTION,
+    payload: energyService.getSumHour(getState().labs.query),
   })
 }

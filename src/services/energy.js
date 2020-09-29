@@ -7,6 +7,8 @@ import { get } from './requests'
 export const getMostEnergy = (params) => get()('energy/lab/', params)
 export const getEnergyAverage = (params) => get()('energy/avg/', params)
 export const getPeakCurrent = (params) => get()('peak_current/', params)
+export const getSumHour = (params) => get()('sum/hour/', params)
+export const getPorcentLab = (params) => get()('energy/lab/', params)
 
 // export const registerUser = (payload) => {
 //   const newPayload = humps.decamelizeKeys(payload)
