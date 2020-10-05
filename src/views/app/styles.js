@@ -14,6 +14,8 @@ export default makeStyles(({ palette }) => ({
     gridTemplateRows: '45px 1fr',
     gridRowGap: '56px',
     padding: 56,
+    backgroundColor: palette.background,
+    height: 'fit-content',
   },
   title: {
     display: 'flex',
@@ -70,5 +72,8 @@ export default makeStyles(({ palette }) => ({
     gridTemplateColumns: 'auto auto',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  children: {
+    height: '100%',
   },
 }))

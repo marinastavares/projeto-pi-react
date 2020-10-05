@@ -128,7 +128,11 @@ const App = ({ children }) => {
             </Grid>
           </Grid>
         </Grid>
-        {menuItems.length && <Grid container>{children}</Grid>}
+        {menuItems.length && (
+          <Grid className={styles.children} container>
+            {children}
+          </Grid>
+        )}
       </Grid>
     </Grid>
   )

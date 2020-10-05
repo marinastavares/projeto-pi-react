@@ -5,7 +5,7 @@ import { GET_ENERGY, GET_ENERGY_AVERAGE, GET_PEAK_CURRENT } from './actions'
 export const mostUsedSelectors = (state) =>
   state.energy.mostUsed
     .map((value) => ({
-      title: value.idDME,
+      title: value.lab,
       value: value.percE,
     }))
     .sort((valueA, valueB) => -valueA.value + valueB.value)

@@ -1,41 +1,45 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { Grid, Typography } from '@material-ui/core'
 import { PieChart } from 'react-minimal-pie-chart'
 import FlashOnIcon from '@material-ui/icons/FlashOn'
 import { useDispatch, useSelector } from 'react-redux'
 import format from 'date-fns/format'
-import ReactApexChart from 'react-apexcharts'
 
 import {
   getMostEnergy,
   getEnergyAverage,
   getPeakCurrent,
   getSumHour,
+  getPorcentualLab,
+  getWeeklyEnergy,
+  getWeeklyPorcentual,
   GET_ENERGY,
   GET_ENERGY_AVERAGE,
   GET_PEAK_CURRENT,
+  GET_SUM_HOUR,
+  GET_PORCENTUAL_LAB,
+  GET_WEEKLY_ENERGY,
 } from 'modules/energy/actions'
-import {
-  mostUsedSelectors,
-  mostUsedLoading,
-  averageSelector,
-  averageLoading,
-  peakCurrentSelector,
-  energySelector,
-} from 'modules/energy/selectors'
+import { mostUsedSelectors, energySelector } from 'modules/energy/selectors'
 import { useOnSuccessCall } from 'utils/hooks'
 
 import useStyles from './styles'
 import CardInfo from './card-info'
+import LineChart from './line-chart'
+import DonutChart from './donut-chart'
+import ColumnChart from './column-chart'
 
 const GeneralView = () => {
   const styles = useStyles()
   const mostUsed = useSelector(mostUsedSelectors)
-  const isUsedLoading = useSelector(mostUsedLoading)
-  const isAverageLoading = useSelector(averageLoading)
-  const average = useSelector(averageSelector)
-  const peakCurrent = useSelector(peakCurrentSelector)
-  const { sumPotency } = useSelector(energySelector)
+  const {
+    sumPotency,
+    avg: average,
+    peakCurrent,
+    porcentual,
+    weeklyEnergy,
+    potWeekday,
+  } = useSelector(energySelector)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -44,82 +48,42 @@ const GeneralView = () => {
 
   const averageAction = () => dispatch(getEnergyAverage())
   const peakCurrentAction = () => dispatch(getPeakCurrent())
+  const weeklyEnergyAction = () => dispatch(getWeeklyEnergy())
   const sumHourAction = () => dispatch(getSumHour())
+  const porcentualLab = () => dispatch(getPorcentualLab())
+  const weeklyPorcentualAction = () => dispatch(getWeeklyPorcentual())
 
-  useOnSuccessCall(GET_ENERGY.ACTION, averageAction)
-  useOnSuccessCall(GET_ENERGY_AVERAGE.ACTION, peakCurrentAction)
-  useOnSuccessCall(GET_PEAK_CURRENT.ACTION, sumHourAction)
+  const [isUsedLoading] = useOnSuccessCall(GET_ENERGY.ACTION, averageAction)
+  const [isAverageLoading] = useOnSuccessCall(
+    GET_ENERGY_AVERAGE.ACTION,
+    peakCurrentAction
+  )
+  const [isPeakCurrentLoading] = useOnSuccessCall(
+    GET_PEAK_CURRENT.ACTION,
+    weeklyEnergyAction
+  )
+  const [isWeeklyEnergyLoading] = useOnSuccessCall(
+    GET_WEEKLY_ENERGY.ACTION,
+    porcentualLab
+  )
+  const [isPorcentualLoading] = useOnSuccessCall(
+    GET_PORCENTUAL_LAB.ACTION,
+    sumHourAction
+  )
+  const [isWeeklyPorcentualLoading] = useOnSuccessCall(
+    GET_SUM_HOUR.ACTION,
+    weeklyPorcentualAction
+  )
 
-  const sumPotencyAllValues = useMemo(() => {
-    const group = sumPotency.reduce((res, obj) => {
-      // for each object obj in the array arr
-      const key = obj.lab // let key be the concatination of locA and locB
-      const newObj = obj // create a new object based on the object obj
-      if (res[key])
-        // if res has a sub-array for the current key then...
-        res[key].push(newObj)
-      // ... push newObj into that sub-array                                                        // otherwise...
-      else res[key] = [newObj] // ... create a new sub-array for this key that initially contain newObj
-      return res
-    }, {})
-    return Object.entries(group).map((values) => ({
-      title: values[0],
-      date: values[1].map((value) =>
-        format(new Date(value.date), 'dd/M hh:mm')
-      ),
-      value: values[1].map((value) => value.wTotal),
-    }))
-  }, [sumPotency])
-
-  const series = sumPotencyAllValues.map((value) => ({
-    name: value.title,
+  const series = sumPotency.map((value) => ({
+    name: value.title.toUpperCase(),
     data: value.value,
   }))
 
-  const options = useMemo(
-    () => ({
-      chart: {
-        type: 'line',
-        stacked: false,
-        height: 500,
-        width: 300,
-        zoom: {
-          type: 'x',
-          enabled: true,
-          autoScaleYaxis: true,
-        },
-      },
-      dataLabels: {
-        enabled: false,
-        style: {
-          colors: ['#F44336', '#E91E63', '#9C27B0'],
-        },
-      },
-      markers: {
-        size: 0,
-      },
-      title: {
-        align: 'left',
-      },
-      fill: {
-        type: 'gradient',
-        gradient: {
-          shadeIntensity: 1,
-          inverseColors: false,
-          opacityFrom: 0.5,
-          opacityTo: 0,
-          stops: [0, 90, 100],
-        },
-      },
-      xaxis: {
-        categories: sumPotencyAllValues[0]?.date,
-      },
-      tooltip: {
-        shared: false,
-      },
-    }),
-    [sumPotencyAllValues]
-  )
+  const seriesWeekday = potWeekday.map((value) => ({
+    name: value.title,
+    data: value.value,
+  }))
 
   // if (!mostUsed.length) {
   //   return null
@@ -153,12 +117,12 @@ const GeneralView = () => {
       >
         <FlashOnIcon color="primary" className={styles.icon} />
         <Typography component="p" variant="h1" color="secondary">
-          {average.toFixed(2)} W
+          {average.toFixed(2)} kWh
         </Typography>
       </CardInfo>
       <CardInfo
         title="Pico de corrente"
-        isLoading={!peakCurrent.lab}
+        isLoading={!peakCurrent.lab || isPeakCurrentLoading}
         containerClassName={styles.peak}
       >
         <PieChart
@@ -193,42 +157,46 @@ const GeneralView = () => {
         </Typography>
       </CardInfo>
       <CardInfo
-        title="Soma das potências"
+        title="Energia gasta da semana"
         className={styles.graph}
-        isLoading={average === 0}
+        isLoading={weeklyEnergy?.length === 0 || isWeeklyEnergyLoading}
       >
-        <ReactApexChart
-          options={options}
-          series={series}
-          type="area"
-          height={200}
-          width={500}
-        />
-      </CardInfo>
-      <CardInfo
-        title="Soma das potências"
-        className={styles.graph}
-        isLoading={sumPotency.length === 0}
-      >
-        {/* <ReactApexChart
-          options={options}
-          series={series}
-          type="area"
-          height={200}
-          width={300}
-        /> */}
+        <ColumnChart value={weeklyEnergy} />
       </CardInfo>
       <CardInfo
         title="Porcentagem de energia consumida"
-        isLoading={average === 0}
+        isLoading={porcentual?.length === 0 || isPorcentualLoading}
       >
-        {/* <ReactApexChart
-          options={options}
-          series={series}
-          type="area"
-          height={200}
-          width={300}
-        /> */}
+        <DonutChart
+          height={280}
+          width={280}
+          values={porcentual.map((value) => value.percE)}
+          labels={porcentual.map((value) => value.lab?.toUpperCase())}
+        />
+      </CardInfo>
+      <CardInfo
+        title="Soma das potências por dia da semana"
+        className={styles.graphComplete}
+        isLoading={sumPotency?.length === 0 || isPorcentualLoading}
+      >
+        <LineChart
+          height={250}
+          width={700}
+          XValues={sumPotency[0]?.date}
+          YValues={series}
+        />
+      </CardInfo>
+      <CardInfo
+        title="Potência da semana"
+        className={styles.graphComplete}
+        isLoading={sumPotency?.length === 0 || isWeeklyPorcentualLoading}
+      >
+        <LineChart
+          height={250}
+          width={700}
+          XValues={potWeekday[0]?.date}
+          YValues={seriesWeekday}
+        />
       </CardInfo>
     </Grid>
   )

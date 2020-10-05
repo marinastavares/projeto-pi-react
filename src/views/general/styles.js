@@ -3,10 +3,10 @@ import { makeStyles } from '@material-ui/styles'
 export default makeStyles(() => ({
   container: {
     display: 'grid',
-    gridTemplateAreas: "'more energy peak' 'graph graph other'",
-    gridTemplateRows: 'repeat(3, 250px)',
+    gridTemplateRows: '200px 300px 300px 300px',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '24px',
+    height: '100%',
   },
   card: {
     padding: '12px',
@@ -34,6 +34,14 @@ export default makeStyles(() => ({
     justifyContent: 'center',
   },
   graph: {
-    gridArea: 'graph',
+    gridColumn: '1 / 3',
+  },
+  graphComplete: {
+    gridColumn: '1 / 4',
+  },
+  background: {
+    '& .apexcharts-canvas.apexcharts-theme-dark': {
+      background: 'transparent',
+    },
   },
 }))
