@@ -14,6 +14,7 @@ import rootReducer from 'modules/reducers'
 import App from 'views/app'
 import General from 'views/general'
 import Info from 'views/info'
+import DME from 'views/dme'
 
 import * as serviceWorker from './serviceWorker'
 import './index.css'
@@ -42,6 +43,7 @@ ReactDOM.render(
         <App path="/">
           <Info path="/modulo" />
           <General path="/" />
+          <DME path="/:lab" />
         </App>
       </Router>
     </ThemeProvider>

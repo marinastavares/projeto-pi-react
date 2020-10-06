@@ -30,7 +30,7 @@ import ColumnChart from 'components/column-chart'
 
 import useStyles from './styles'
 
-const GeneralView = () => {
+const DMEView = () => {
   const styles = useStyles()
   const mostUsed = useSelector(mostUsedSelectors)
   const query = useSelector(querySelector)
@@ -211,4 +211,4 @@ const GeneralView = () => {
   )
 }
 
-export default GeneralView
+export default DMEView

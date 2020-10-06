@@ -18,6 +18,7 @@ module.exports = {
           ['views', './src/views'],
           ['modules', './src/modules'],
           ['services', './src/services'],
+          ['components', './src/components'],
         ],
         extensions: ['.ts', '.js', '.jsx', '.json']
       }

@@ -103,17 +103,26 @@ const energy = createReducer(INITIAL_STATE, {
     }, {})
     return produce(state, (previousState) => {
       previousState.potWeekday = Object.entries(group).map((values) => {
+        const hours = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(
+          (value, index) => `${index}:00`
+        )
+        const dateValues = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(
+          () => `0`
+        )
         return {
           title: WEEKDAYS[values[0]],
-          date: values[1].map((value) => {
-            const localDate = new Date(value.date)
-            const londonTimeZone = 'Europe/London'
-            const londonDate = utcToZonedTime(localDate, londonTimeZone)
-            return format(londonDate, 'HH:mm', {
-              timeZone: 'Europe/London',
-            })
-          }),
-          value: values[1].map((value) => value.wAvg),
+          date: [
+            ...hours,
+            ...values[1].map((value) => {
+              const localDate = new Date(value.date)
+              const londonTimeZone = 'Europe/London'
+              const londonDate = utcToZonedTime(localDate, londonTimeZone)
+              return format(londonDate, 'dd/mm HH:mm', {
+                timeZone: 'Europe/London',
+              })
+            }),
+          ],
+          value: [...dateValues, ...values[1].map((value) => value.wAvg)],
         }
       })
     })

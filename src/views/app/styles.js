@@ -16,6 +16,7 @@ export default makeStyles(({ palette }) => ({
     padding: 56,
     backgroundColor: palette.background,
     height: 'fit-content',
+    gridColumn: 2,
   },
   title: {
     display: 'flex',
@@ -75,5 +76,15 @@ export default makeStyles(({ palette }) => ({
   },
   children: {
     height: '100%',
+    width: '100%',
+  },
+  navbar: {
+    zIndex: 20,
+    height: '100%',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    overflowX: 'hidden',
+    width: '260px',
   },
 }))

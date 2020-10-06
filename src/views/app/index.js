@@ -6,20 +6,14 @@ import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects'
 import PropTypes from 'prop-types'
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
 import MenuItem from '@material-ui/core/MenuItem'
-import subDays from 'date-fns/subDays'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { getLabs, setQuery } from 'modules/labs/actions'
 import { menuSelector } from 'modules/labs/selectors'
+import { transformDate } from 'utils/helpers'
 
 import useStyles from './styles'
 import Navbar from './navbar'
-
-const transformDate = (difference) =>
-  `initialDate=${new Date().toISOString()}&finalDate=${subDays(
-    new Date(),
-    difference
-  ).toISOString()}`
 
 const SELECT_OPTIONS = [
   {
@@ -83,7 +77,7 @@ const App = ({ children }) => {
 
   return (
     <Grid container className={styles.container}>
-      <Navbar menuItems={menuItems} />
+      <Navbar menuItems={menuItems} className={styles.navbar} />
       <Grid className={styles.content}>
         <Grid className={styles.header}>
           <Grid>
@@ -129,9 +123,7 @@ const App = ({ children }) => {
           </Grid>
         </Grid>
         {menuItems.length && (
-          <Grid className={styles.children} container>
-            {children}
-          </Grid>
+          <Grid className={styles.children}>{children}</Grid>
         )}
       </Grid>
     </Grid>

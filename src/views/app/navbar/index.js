@@ -15,7 +15,7 @@ import PropTypes from 'prop-types'
 
 import useStyles from './styles'
 
-const Navbar = ({ menuItems }) => {
+const Navbar = ({ menuItems, className }) => {
   const styles = useStyles()
   const location = useLocation()
 
@@ -24,7 +24,11 @@ const Navbar = ({ menuItems }) => {
   ])
 
   return (
-    <AppBar color="primary" position="static" className={styles.header}>
+    <AppBar
+      color="primary"
+      position="static"
+      className={classnames(className, styles.header)}
+    >
       <Toolbar disableGutters className={styles.toolbar}>
         <Grid className={styles.logo} container alignItems="center">
           <Grid className={styles.icon}>
@@ -81,6 +85,7 @@ const Navbar = ({ menuItems }) => {
 
 Navbar.propTypes = {
   menuItems: PropTypes.arrayOf().isRequired,
+  className: PropTypes.string.isRequired,
 }
 
 export default React.memo(Navbar)
