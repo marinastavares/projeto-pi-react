@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 import produce from 'immer'
-import { format, utcToZonedTime } from 'date-fns-tz'
+import { format } from 'date-fns'
 
 import { createReducer } from 'utils/redux'
 
@@ -25,6 +25,7 @@ const INITIAL_STATE = {
   porcentual: [],
   weeklyEnergy: [],
   potWeekday: [],
+  totalEnergyMonth: 0,
 }
 
 const WEEKDAYS = {
@@ -40,7 +41,7 @@ const WEEKDAYS = {
 const energy = createReducer(INITIAL_STATE, {
   [GET_ENERGY.FULFILLED]: (state, { payload }) =>
     produce(state, (previousState) => {
-      previousState.mostUsed = payload
+      previousState.totalEnergyMonth = payload.totalEnergyMonth
     }),
   [GET_ENERGY_TOTAL.FULFILLED]: (state, { payload }) =>
     produce(state, (previousState) => {
@@ -73,12 +74,7 @@ const energy = createReducer(INITIAL_STATE, {
       previousState.sumPotency = Object.entries(group).map((values) => ({
         title: values[0],
         date: values[1].map((value) => {
-          const localDate = new Date(value.date)
-          const londonTimeZone = 'Europe/London'
-          const londonDate = utcToZonedTime(localDate, londonTimeZone)
-          return format(londonDate, 'dd/M hh:mm', {
-            timeZone: 'Europe/London',
-          })
+          return format(new Date(value.date), 'dd/M hh:mm')
         }),
         value: values[1].map((value) => value.wTotal),
       }))
@@ -120,12 +116,7 @@ const energy = createReducer(INITIAL_STATE, {
           date: [
             ...hours,
             ...values[1].map((value) => {
-              const localDate = new Date(value.date)
-              const londonTimeZone = 'Europe/London'
-              const londonDate = utcToZonedTime(localDate, londonTimeZone)
-              return format(londonDate, 'dd/mm HH:mm', {
-                timeZone: 'Europe/London',
-              })
+              return format(new Date(value.date), 'dd/mm hh:mm')
             }),
           ],
           value: [...dateValues, ...values[1].map((value) => value.wAvg)],

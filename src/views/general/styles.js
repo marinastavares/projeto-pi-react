@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles'
 export default makeStyles(() => ({
   container: {
     display: 'grid',
-    gridTemplateRows: '200px 300px 300px 300px',
+    gridTemplateRows: '200px 300px 300px 300px 300px 300px',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '24px',
     height: '100%',

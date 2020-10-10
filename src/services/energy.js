@@ -4,7 +4,7 @@
 
 import { get } from './requests'
 
-export const getMostEnergy = (params) => get()('energy/lab/', params)
+export const getMostEnergy = (params) => get()('energy/total/', params)
 export const getEnergyAverage = (params) => get()('energy/avg/', params)
 export const getEnergyTotal = (params) => get()('energy/total/', params)
 export const getPeakCurrent = (params) => get()('peak_current/', params)

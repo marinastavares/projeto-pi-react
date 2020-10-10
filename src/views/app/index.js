@@ -7,9 +7,11 @@ import PropTypes from 'prop-types'
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
 import MenuItem from '@material-ui/core/MenuItem'
 import { useDispatch, useSelector } from 'react-redux'
+import { formatDistance } from 'date-fns'
+import { pt } from 'date-fns/esm/locale'
 
 import { getLabs, setQuery } from 'modules/labs/actions'
-import { menuSelector } from 'modules/labs/selectors'
+import { menuSelector, labsSelector } from 'modules/labs/selectors'
 import { transformDate } from 'utils/helpers'
 
 import useStyles from './styles'
@@ -47,6 +49,7 @@ const App = ({ children }) => {
   const location = useLocation()
   const [selectDate, setDate] = useState('')
   const menuItems = useSelector(menuSelector)
+  const { currentLab } = useSelector(labsSelector)
   const dispatch = useDispatch()
 
   const handleClick = useCallback(
@@ -57,12 +60,25 @@ const App = ({ children }) => {
     [dispatch]
   )
 
+  const showLastUpdate = useMemo(
+    () =>
+      location.pathname.replace('/', '') === currentLab.slug &&
+      currentLab.updatedAt,
+    [currentLab.slug, currentLab.updatedAt, location.pathname]
+  )
+
   const currentHeader = useMemo(() => {
     const pathname = menuItems?.find((esp) => esp.route === location.pathname)
     if (pathname) {
       return {
         icon: <EmojiObjectsIcon className={styles.iconHeader} />,
         title: pathname.name,
+      }
+    }
+    if (location.pathname !== '/') {
+      return {
+        icon: <EmojiObjectsIcon className={styles.iconHeader} />,
+        title: location.pathname.replace('/', '')?.toUpperCase(),
       }
     }
     return {
@@ -81,15 +97,32 @@ const App = ({ children }) => {
       <Grid className={styles.content}>
         <Grid className={styles.header}>
           <Grid>
-            <Typography
-              component="h1"
-              variant="h1"
-              color="secondary"
-              className={styles.title}
-            >
-              {currentHeader.icon}
-              {currentHeader.title}
-            </Typography>
+            <Grid container justify="space-between" alignItems="flex-end">
+              <Typography
+                component="h1"
+                variant="h1"
+                color="secondary"
+                className={styles.title}
+              >
+                {currentHeader.icon}
+                {currentHeader.title}
+              </Typography>
+              {showLastUpdate ? (
+                <Typography
+                  component="p"
+                  variant="h4"
+                  color="secondary"
+                  className={styles.title}
+                >
+                  última atualização há{' '}
+                  {formatDistance(new Date(currentLab.updatedAt), new Date(), {
+                    locale: pt,
+                  })}
+                </Typography>
+              ) : (
+                ''
+              )}
+            </Grid>
             <Divider className={styles.dividerHeader} />
           </Grid>
           <Grid container>

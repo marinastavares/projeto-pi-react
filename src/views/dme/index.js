@@ -1,27 +1,23 @@
-import React, { useEffect } from 'react'
-import { Grid, Typography } from '@material-ui/core'
-import { PieChart } from 'react-minimal-pie-chart'
+import React, { useEffect, useCallback, useState, useMemo } from 'react'
+import { Grid, Typography, Tabs, Tab } from '@material-ui/core'
 import FlashOnIcon from '@material-ui/icons/FlashOn'
 import { useDispatch, useSelector } from 'react-redux'
-import format from 'date-fns/format'
+import { useParams } from '@reach/router'
 
 import {
-  getMostEnergy,
-  getEnergyAverage,
-  getPeakCurrent,
-  getSumHour,
-  getPorcentualLab,
-  getWeeklyEnergy,
-  getWeeklyPorcentual,
-  GET_ENERGY,
-  GET_ENERGY_AVERAGE,
-  GET_PEAK_CURRENT,
-  GET_SUM_HOUR,
-  GET_PORCENTUAL_LAB,
-  GET_WEEKLY_ENERGY,
-} from 'modules/energy/actions'
-import { mostUsedSelectors, energySelector } from 'modules/energy/selectors'
-import { querySelector } from 'modules/labs/selectors'
+  getDMEInfo,
+  GET_DME_INFO,
+  getDmeA,
+  GET_DME_A,
+  getDmeV,
+  GET_DME_V,
+  getDmeW,
+  GET_DME_W,
+  getDmeE,
+} from 'modules/dme/actions'
+import { getLab, GET_LAB } from 'modules/labs/actions'
+import { dmeSelector } from 'modules/dme/selectors'
+import { querySelector, labsSelector } from 'modules/labs/selectors'
 import { useOnSuccessCall, usePrevious } from 'utils/hooks'
 import CardInfo from 'components/card-info'
 import LineChart from 'components/line-chart'
@@ -32,181 +28,165 @@ import useStyles from './styles'
 
 const DMEView = () => {
   const styles = useStyles()
-  const mostUsed = useSelector(mostUsedSelectors)
-  const query = useSelector(querySelector)
-  const lastQuery = usePrevious(query)
-  const {
-    sumPotency,
-    avg: average,
-    peakCurrent,
-    porcentual,
-    weeklyEnergy,
-    potWeekday,
-  } = useSelector(energySelector)
+  const { currentLab } = useSelector(labsSelector)
+  const listDMEs = useSelector(dmeSelector)
   const dispatch = useDispatch()
+  const { lab } = useParams()
+  const [value, setValue] = useState(0)
+
+  const handleChange = useCallback((event, newValue) => {
+    setValue(newValue)
+  }, [])
+
+  const currentDMEId = useMemo(
+    () => currentLab?.pontosDeMedicao?.[value].idDME,
+    [currentLab?.pontosDeMedicao, value]
+  )
+  const pastDME = usePrevious(currentDMEId)
+  const currentDME = useMemo(() => listDMEs[currentDMEId], [
+    currentDMEId,
+    listDMEs,
+  ])
 
   useEffect(() => {
-    dispatch(getMostEnergy())
-  }, [dispatch])
-
-  useEffect(() => {
-    if (query?.finalDate !== lastQuery?.finalDate) {
-      dispatch(getMostEnergy())
+    if (lab) {
+      dispatch(getLab(lab))
     }
-  }, [dispatch, lastQuery?.finalDate, query?.finalDate])
+  }, [dispatch, lab])
+  useEffect(() => {
+    if (currentDMEId && !listDMEs[currentDMEId]) {
+      dispatch(getDMEInfo(currentDMEId))
+    }
+  }, [currentDMEId, dispatch, lab, listDMEs])
 
-  const averageAction = () => dispatch(getEnergyAverage())
-  const peakCurrentAction = () => dispatch(getPeakCurrent())
-  const weeklyEnergyAction = () => dispatch(getWeeklyEnergy())
-  const sumHourAction = () => dispatch(getSumHour())
-  const porcentualLab = () => dispatch(getPorcentualLab())
-  const weeklyPorcentualAction = () => dispatch(getWeeklyPorcentual())
+  // useEffect(() => {
+  //   if (query?.finalDate !== lastQuery?.finalDate) {
+  //     dispatch(getMostEnergy())
+  //   }
+  // }, [dispatch, lastQuery?.finalDate, query?.finalDate])
 
-  const [isUsedLoading] = useOnSuccessCall(GET_ENERGY.ACTION, averageAction)
-  const [isAverageLoading] = useOnSuccessCall(
-    GET_ENERGY_AVERAGE.ACTION,
-    peakCurrentAction
-  )
-  const [isPeakCurrentLoading] = useOnSuccessCall(
-    GET_PEAK_CURRENT.ACTION,
-    weeklyEnergyAction
-  )
-  const [isWeeklyEnergyLoading] = useOnSuccessCall(
-    GET_WEEKLY_ENERGY.ACTION,
-    porcentualLab
-  )
-  const [isPorcentualLoading] = useOnSuccessCall(
-    GET_PORCENTUAL_LAB.ACTION,
-    sumHourAction
-  )
-  const [isWeeklyPorcentualLoading] = useOnSuccessCall(
-    GET_SUM_HOUR.ACTION,
-    weeklyPorcentualAction
-  )
+  const currentAction = useCallback(() => {
+    if (currentDME?.disabled) {
+      return
+    }
+    dispatch(getDmeA(currentDMEId))
+  }, [currentDME?.disabled, currentDMEId, dispatch])
+  const voltageAction = () => dispatch(getDmeV(currentDMEId))
+  const potencyAction = () => dispatch(getDmeW(currentDMEId))
+  const energyAction = () => dispatch(getDmeE(currentDMEId))
 
-  const series = sumPotency.map((value) => ({
-    name: value.title.toUpperCase(),
-    data: value.value,
-  }))
-
-  const seriesWeekday = potWeekday.map((value) => ({
-    name: value.title,
-    data: value.value,
-  }))
+  useOnSuccessCall(GET_DME_INFO.ACTION, currentAction)
+  useOnSuccessCall(GET_DME_A.ACTION, voltageAction)
+  useOnSuccessCall(GET_DME_V.ACTION, potencyAction)
+  useOnSuccessCall(GET_DME_W.ACTION, energyAction)
 
   // if (!mostUsed.length) {
   //   return null
   // }
   return (
     <Grid className={styles.container}>
-      <CardInfo title="Mais utilizado" isLoading={isUsedLoading}>
-        <PieChart
-          className={styles.chart}
-          lineWidth={15}
-          rounded
-          data={mostUsed}
-          // eslint-disable-next-line react/jsx-no-bind
-          label={() => `${mostUsed[0].value * 100}%`}
-          labelPosition={0}
-          labelStyle={{
-            fontSize: '24px',
-            fontFamily: 'Nunito',
-            fill: '#DDE2FF',
-          }}
-          animate
-        />
-        <Typography component="p" variant="h1" color="secondary">
-          {mostUsed[0]?.title?.toUpperCase()}
-        </Typography>
-      </CardInfo>
-      <CardInfo
-        title="Gasto médio de energia"
-        containerClassName={styles.energy}
-        isLoading={average === 0 || isAverageLoading}
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        aria-label="simple tabs example"
+        className={styles.tabs}
       >
-        <FlashOnIcon color="primary" className={styles.icon} />
-        <Typography component="p" variant="h1" color="secondary">
-          {average.toFixed(2)} kWh
-        </Typography>
-      </CardInfo>
-      <CardInfo
-        title="Pico de corrente"
-        isLoading={!peakCurrent.lab || isPeakCurrentLoading}
-        containerClassName={styles.peak}
-      >
-        <PieChart
-          className={styles.chartPeak}
-          data={[
-            {
-              title: 'PeakCurrent',
-              value: peakCurrent.value,
-              color: '#3751FF',
-            },
-          ]}
-          startAngle={180}
-          lengthAngle={180}
-          viewBoxSize={[100, 50]}
-          lineWidth={15}
-          // eslint-disable-next-line react/jsx-no-bind
-          label={() => `${peakCurrent.value}A`}
-          labelPosition={0}
-          labelStyle={{
-            fontSize: '16px',
-            fontFamily: 'Nunito',
-            fill: '#DDE2FF',
-          }}
-          animate
-          rounded
-        />
-        <Typography component="span" variant="h5" color="secondary">
-          {peakCurrent.date && format(new Date(peakCurrent.date), 'dd/M hh:mm')}
-        </Typography>
-        <Typography component="p" variant="h4" color="secondary">
-          {peakCurrent?.lab?.toUpperCase()}
-        </Typography>
-      </CardInfo>
-      <CardInfo
-        title="Energia gasta da semana"
-        className={styles.graph}
-        isLoading={weeklyEnergy?.length === 0 || isWeeklyEnergyLoading}
-      >
-        <ColumnChart value={weeklyEnergy} />
-      </CardInfo>
-      <CardInfo
-        title="Porcentagem de energia consumida"
-        isLoading={porcentual?.length === 0 || isPorcentualLoading}
-      >
-        <DonutChart
-          height={280}
-          width={280}
-          values={porcentual.map((value) => value.percE)}
-          labels={porcentual.map((value) => value.lab?.toUpperCase())}
-        />
-      </CardInfo>
-      <CardInfo
-        title="Soma das potências por dia da semana"
-        className={styles.graphComplete}
-        isLoading={sumPotency?.length === 0 || isPorcentualLoading}
-      >
-        <LineChart
-          height={250}
-          width={700}
-          XValues={sumPotency[0]?.date}
-          YValues={series}
-        />
-      </CardInfo>
-      <CardInfo
-        title="Potência da semana"
-        className={styles.graphComplete}
-        isLoading={sumPotency?.length === 0 || isWeeklyPorcentualLoading}
-      >
-        <LineChart
-          height={250}
-          width={700}
-          XValues={potWeekday[0]?.date}
-          YValues={seriesWeekday}
-        />
-      </CardInfo>
+        {currentLab?.pontosDeMedicao?.map((dme) => (
+          <Tab
+            label={dme.ponto}
+            key={dme.id}
+            id={dme.idDme}
+            className={styles.tab}
+          />
+        ))}
+      </Tabs>
+      {currentDME?.disabled ? (
+        <Typography color="secondary">DME desativado</Typography>
+      ) : (
+        <>
+          <CardInfo
+            title="Porcentagem de potência em cada fase"
+            isLoading={listDMEs && Object.keys(listDMEs).length === 0}
+          >
+            {currentDME?.perc.length > 0 && (
+              <DonutChart
+                height={280}
+                width={280}
+                values={currentDME?.perc?.map((attribute) => attribute.percW)}
+                labels={currentDME?.perc?.map(
+                  (attribute) => `Fase ${attribute.phase}`
+                )}
+              />
+            )}
+          </CardInfo>
+          <CardInfo
+            title="Corrente em cada fase"
+            isLoading={listDMEs && Object.keys(listDMEs).length === 0}
+          >
+            <ColumnChart
+              value={currentDME?.lastA?.map((A) => A.value)}
+              isPhaseGraph
+            />
+          </CardInfo>
+          <CardInfo
+            title="Tensão em cada fase"
+            isLoading={listDMEs && Object.keys(listDMEs).length === 0}
+          >
+            <ColumnChart
+              value={currentDME?.lastV?.map((V) => V.value)}
+              isPhaseGraph
+            />
+          </CardInfo>
+          <CardInfo
+            title="Gráfico de corrente em cada fase"
+            isLoading={!currentDME?.current}
+            className={styles.graphComplete}
+          >
+            <LineChart
+              height={250}
+              width={700}
+              XValues={currentDME?.current?.date}
+              YValues={currentDME?.current?.value}
+            />
+          </CardInfo>
+          <CardInfo
+            title="Gráfico de tensão em cada fase"
+            isLoading={!currentDME?.voltage}
+            className={styles.graphComplete}
+          >
+            <LineChart
+              height={250}
+              width={700}
+              XValues={currentDME?.voltage?.date}
+              YValues={currentDME?.voltage?.value}
+            />
+          </CardInfo>
+          <CardInfo
+            title="Gráfico de potência em cada fase"
+            isLoading={!currentDME?.potency}
+            className={styles.graphComplete}
+          >
+            <LineChart
+              height={250}
+              width={700}
+              XValues={currentDME?.potency?.date}
+              YValues={currentDME?.potency?.value}
+            />
+          </CardInfo>
+          <CardInfo
+            title="Gráfico de energia em cada fase"
+            isLoading={!currentDME?.energy}
+            className={styles.graphComplete}
+          >
+            <LineChart
+              height={250}
+              width={700}
+              XValues={currentDME?.energy?.date}
+              YValues={currentDME?.energy?.value}
+            />
+          </CardInfo>
+        </>
+      )}
     </Grid>
   )
 }

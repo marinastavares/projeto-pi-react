@@ -32,10 +32,11 @@ import useStyles from './styles'
 
 const GeneralView = () => {
   const styles = useStyles()
-  const mostUsed = useSelector(mostUsedSelectors)
+  // const mostUsed = useSelector(mostUsedSelectors)
   const query = useSelector(querySelector)
   const lastQuery = usePrevious(query)
   const {
+    totalEnergyMonth,
     sumPotency,
     avg: average,
     peakCurrent,
@@ -99,24 +100,14 @@ const GeneralView = () => {
   // }
   return (
     <Grid className={styles.container}>
-      <CardInfo title="Mais utilizado" isLoading={isUsedLoading}>
-        <PieChart
-          className={styles.chart}
-          lineWidth={15}
-          rounded
-          data={mostUsed}
-          // eslint-disable-next-line react/jsx-no-bind
-          label={() => `${mostUsed[0].value * 100}%`}
-          labelPosition={0}
-          labelStyle={{
-            fontSize: '24px',
-            fontFamily: 'Nunito',
-            fill: '#DDE2FF',
-          }}
-          animate
-        />
-        <Typography component="p" variant="h1" color="secondary">
-          {mostUsed[0]?.title?.toUpperCase()}
+      <CardInfo
+        title="Gasto total de energia"
+        containerClassName={styles.energy}
+        isLoading={isUsedLoading}
+      >
+        <FlashOnIcon color="primary" className={styles.icon} />
+        <Typography component="p" variant="h2" color="secondary">
+          {totalEnergyMonth.toFixed(2)} kWh
         </Typography>
       </CardInfo>
       <CardInfo

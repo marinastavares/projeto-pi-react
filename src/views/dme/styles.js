@@ -1,12 +1,27 @@
 import { makeStyles } from '@material-ui/styles'
 
-export default makeStyles(() => ({
+export default makeStyles(({ palette }) => ({
   container: {
     display: 'grid',
-    gridTemplateRows: '200px 300px 300px 300px',
+    gridTemplateRows: '60px 250px 300px 300px 300px 300px',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '24px',
     height: '100%',
+  },
+  tabs: {
+    gridColumn: '1 / 4',
+    borderBottom: `0`,
+
+    '& .PrivateTabIndicator-colorSecondary-342': {
+      backgroundColor: palette.primary.main,
+    },
+  },
+  tab: {
+    '& .MuiTab-wrapper': {
+      color: palette.secondary.main,
+      textTransform: 'capitalize',
+      fontSize: '16px',
+    },
   },
   card: {
     padding: '12px',

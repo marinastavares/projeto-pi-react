@@ -12,15 +12,18 @@ INITIAL_VALUES.map((value) => {
   WEEK_ARRAY[value] = 0
   return null
 })
-const ColumnChart = ({ value }) => {
+const ColumnChart = ({ value, isPhaseGraph }) => {
   const styles = useStyles()
   const currentValues = useMemo(() => {
+    if (isPhaseGraph) {
+      return value
+    }
     value.map((energy) => {
       WEEK_ARRAY[energy.id] = energy.totalEnergy.toFixed(2)
       return null
     })
     return Object.values(WEEK_ARRAY)
-  }, [value])
+  }, [isPhaseGraph, value])
 
   const options = useMemo(
     () => ({
@@ -51,15 +54,17 @@ const ColumnChart = ({ value }) => {
           fontFamily: 'Nunito',
         },
         xaxis: {
-          categories: [
-            'Domingo',
-            'Segunda',
-            'Terça',
-            'Quarta',
-            'Quinta',
-            'Sexta',
-            'Sábado',
-          ],
+          categories: isPhaseGraph
+            ? ['Fase 1', 'Fase 2', 'Fase 3']
+            : [
+                'Domingo',
+                'Segunda',
+                'Terça',
+                'Quarta',
+                'Quinta',
+                'Sexta',
+                'Sábado',
+              ],
           position: 'bottom',
           axisBorder: {
             show: false,
@@ -104,20 +109,24 @@ const ColumnChart = ({ value }) => {
         },
       },
     }),
-    []
+    [isPhaseGraph]
   )
   return (
     <ReactApexChart
-      series={[
-        {
-          name: 'Gasto de energia',
-          data: currentValues,
-        },
-      ]}
+      series={
+        isPhaseGraph
+          ? [{ name: '', data: value }]
+          : [
+              {
+                name: 'Gasto de energia',
+                data: currentValues,
+              },
+            ]
+      }
       options={options.options}
       type="bar"
-      height={250}
-      width={450}
+      height={isPhaseGraph ? 200 : 250}
+      width={isPhaseGraph ? 200 : 450}
       className={styles.background}
     />
   )
@@ -125,9 +134,11 @@ const ColumnChart = ({ value }) => {
 
 ColumnChart.propTypes = {
   value: PropTypes.string,
+  isPhaseGraph: PropTypes.bool,
 }
 
 ColumnChart.defaultProps = {
   value: '',
+  isPhaseGraph: false,
 }
 export default React.memo(ColumnChart)
