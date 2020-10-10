@@ -13,10 +13,12 @@ import {
   GET_PORCENTUAL_LAB,
   GET_WEEKLY_ENERGY,
   GET_WEEKLY_PORCENTUAL,
+  GET_ENERGY_TOTAL,
 } from './actions'
 
 const INITIAL_STATE = {
   mostUsed: [],
+  totalEnergy: [],
   avg: 0,
   peakCurrent: {},
   sumPotency: [],
@@ -39,6 +41,10 @@ const energy = createReducer(INITIAL_STATE, {
   [GET_ENERGY.FULFILLED]: (state, { payload }) =>
     produce(state, (previousState) => {
       previousState.mostUsed = payload
+    }),
+  [GET_ENERGY_TOTAL.FULFILLED]: (state, { payload }) =>
+    produce(state, (previousState) => {
+      previousState.totalEnergy = payload
     }),
   [GET_ENERGY_AVERAGE.FULFILLED]: (state, { payload }) =>
     produce(state, (previousState) => {

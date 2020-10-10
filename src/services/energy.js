@@ -6,6 +6,7 @@ import { get } from './requests'
 
 export const getMostEnergy = (params) => get()('energy/lab/', params)
 export const getEnergyAverage = (params) => get()('energy/avg/', params)
+export const getEnergyTotal = (params) => get()('energy/total/', params)
 export const getPeakCurrent = (params) => get()('peak_current/', params)
 export const getSumHour = (params) => get()('sum/hour/', params)
 export const getPorcentualLab = (params) => get()('energy/lab/', params)

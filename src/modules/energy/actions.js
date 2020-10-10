@@ -14,6 +14,7 @@ export const GET_WEEKLY_PORCENTUAL = defineAction(
   'GET_WEEKLY_PORCENTUAL',
   REQUEST
 )
+export const GET_ENERGY_TOTAL = defineAction('GET_ENERGY_TOTAL', REQUEST)
 
 export const getMostEnergy = () => (dispatch, getState) => {
   dispatch({
@@ -61,5 +62,12 @@ export const getWeeklyPorcentual = () => (dispatch, getState) => {
   dispatch({
     type: GET_WEEKLY_PORCENTUAL.ACTION,
     payload: energyService.getWeeklyPorcentual(getState().labs.query),
+  })
+}
+
+export const getEnergyTotal = () => (dispatch, getState) => {
+  dispatch({
+    type: GET_ENERGY_TOTAL.ACTION,
+    payload: energyService.getEnergyTotal(getState().labs.query),
   })
 }
