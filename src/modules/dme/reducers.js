@@ -1,6 +1,7 @@
 import produce from 'immer'
 import { format } from 'date-fns'
 
+import { GET_LABS } from 'modules/labs/actions'
 import { createReducer } from 'utils/redux'
 
 import {
@@ -12,6 +13,7 @@ import {
 } from './actions'
 
 const INITIAL_STATE = {
+  labs: {},
   DME: {},
 }
 
@@ -43,7 +45,6 @@ const groupByPhase = (payload, end) => {
 
 const dme = createReducer(INITIAL_STATE, {
   [GET_DME_INFO.FULFILLED]: (state, { payload, meta }) => {
-    console.log('groupByPhase -> payload?.perc?.length', payload?.perc?.length)
     if (payload?.perc?.length === 0) {
       return produce(state, (previousState) => {
         // eslint-disable-next-line no-param-reassign
@@ -105,6 +106,17 @@ const dme = createReducer(INITIAL_STATE, {
         })),
         date: group[2].map((values) => values.dateE),
       }
+    })
+  },
+  [GET_LABS.FULFILLED]: (state, { payload }) => {
+    const labs = {}
+    payload.map((value) => {
+      labs[value.slug] = {}
+      return null
+    })
+    return produce(state, (previousState) => {
+      // eslint-disable-next-line no-param-reassign
+      previousState.labs = labs
     })
   },
 })

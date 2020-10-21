@@ -19,6 +19,7 @@ export const getLab = (lab) => (dispatch) => {
   dispatch({
     type: GET_LAB.ACTION,
     payload: labsServices.getLab(lab)(),
+    meta: { lab },
   })
 }
 

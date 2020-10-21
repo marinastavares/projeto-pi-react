@@ -5,9 +5,12 @@
   "dependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.9.0",
     "@craco/craco": "^5.6.4",
+    "@date-io/date-fns": "1.x",
     "@material-ui/core": "4.9.8",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/pickers": "^3.2.10",
     "@material-ui/styles": "^4.9.6",
+    "@randex/material-ui-multiple-dates-picker": "^0.3.0",
     "@reach/router": "^1.3.3",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -31,6 +34,8 @@
     "react-apexcharts": "^1.3.7",
     "react-awesome-spinners": "^1.3.1",
     "react-dom": "^16.13.1",
+    "react-fade-in": "^1.1.1",
+    "react-lottie": "^1.2.3",
     "react-minimal-pie-chart": "^8.0.1",
     "react-redux": "^7.2.0",
     "react-scripts": "3.4.1",
@@ -52,11 +57,11 @@
     "eject": "craco eject",
     "lint": "./node_modules/.bin/eslint ."
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint"
-    }
-  },
+  // "husky": {
+  //   "hooks": {
+  //     "pre-commit": "yarn lint"
+  //   }
+  // },
   "eslintConfig": {
     "extends": "react-app"
   },

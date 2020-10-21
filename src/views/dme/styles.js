@@ -59,4 +59,7 @@ export default makeStyles(({ palette }) => ({
       background: 'transparent',
     },
   },
+  loading: {
+    margin: '0 150px',
+  },
 }))

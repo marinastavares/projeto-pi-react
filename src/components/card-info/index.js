@@ -1,8 +1,9 @@
 import React from 'react'
-import { Grid, Typography, Paper } from '@material-ui/core'
+import { Grid, Typography, Paper, IconButton, Tooltip } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Ellipsis } from 'react-awesome-spinners'
+import AccessAlarmIcon from '@material-ui/icons/AccessAlarm'
 
 import useStyles from './styles'
 
@@ -16,9 +17,26 @@ const CardInfo = ({
   const styles = useStyles()
   return (
     <Paper variant="outlined" className={classnames(styles.card, className)}>
-      <Typography component="h2" variant="h2" color="secondary">
-        {title}
-      </Typography>
+      <Grid
+        container
+        justify="space-between"
+        direction="row"
+        alignItems="flex-start"
+      >
+        <Typography
+          className={styles.width}
+          component="h2"
+          variant="h3"
+          color="secondary"
+        >
+          {title}
+        </Typography>
+        <Tooltip title="Editar tempo">
+          <IconButton size="small" color="secondary">
+            <AccessAlarmIcon />
+          </IconButton>
+        </Tooltip>
+      </Grid>
       {isLoading ? (
         <Grid
           container

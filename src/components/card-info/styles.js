@@ -7,4 +7,8 @@ export default makeStyles(() => ({
   loading: {
     margin: '16px',
   },
+  width: {
+    width: '80%',
+    display: 'block',
+  },
 }))

@@ -69,6 +69,7 @@ const App = ({ children }) => {
 
   const currentHeader = useMemo(() => {
     const pathname = menuItems?.find((esp) => esp.route === location.pathname)
+    console.log('currentHeader -> menuItems', menuItems)
     if (pathname) {
       return {
         icon: <EmojiObjectsIcon className={styles.iconHeader} />,

@@ -5,6 +5,7 @@ import FlashOnIcon from '@material-ui/icons/FlashOn'
 import { useDispatch, useSelector } from 'react-redux'
 import format from 'date-fns/format'
 
+import ModalTime from 'components/card-info/modal-time'
 import {
   getMostEnergy,
   getEnergyAverage,
@@ -198,6 +199,7 @@ const GeneralView = () => {
           YValues={seriesWeekday}
         />
       </CardInfo>
+      <ModalTime />
     </Grid>
   )
 }

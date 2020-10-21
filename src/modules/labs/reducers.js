@@ -13,16 +13,34 @@ const INITIAL_STATE = {
   currentLab: {},
 }
 
+const groupByLab = (payload) => {
+  const group = payload.reduce((res, obj) => {
+    // for each object obj in the array arr
+    const key = obj.lab.toUpperCase() // let key be the concatination of locA and locB
+    const newObj = { ...obj, route: `/${obj.lab}` } // create a new object based on the object obj
+    if (res[key])
+      // if res has a sub-array for the current key then...
+      res[key].push(newObj)
+    // ... push newObj into that sub-array                                                        // otherwise...
+    else res[key] = [newObj] // ... create a new sub-array for this key that initially contain newObj
+    return res
+  }, {})
+
+  return group
+}
+
 const labs = createReducer(INITIAL_STATE, {
-  [GET_LABS.FULFILLED]: (state, { payload }) =>
-    produce(state, (previousState) => {
-      previousState.names = payload.map((values) => ({
-        name: values.slug.toUpperCase(),
-        route: `/${values.slug}`,
+  [GET_LABS.FULFILLED]: (state, { payload }) => {
+    const group = groupByLab(payload)
+    return produce(state, (previousState) => {
+      previousState.labs = group
+      previousState.names = Object.keys(group).map((value) => ({
+        name: value.toUpperCase(),
+        route: `/${value}`,
       }))
-    }),
+    })
+  },
   [GET_DME_INFO.FULFILLED]: (state, { payload }) => {
-    console.log('payload', payload)
     if (payload.lastA.length === 0) {
       return state
     }
