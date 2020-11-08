@@ -86,6 +86,7 @@ export default createMuiTheme(
       MuiMenuItem: {
         root: {
           fontFamily: 'Nunito',
+          color: '#DDE2FF',
         },
       },
       MuiDialogTitle: {
@@ -111,12 +112,22 @@ export default createMuiTheme(
       MuiFormLabel: {
         root: {
           fontSize: '16px',
+          color: '#9FA2B4',
         },
       },
       MuiInputBase: {
+        root: {
+          color: '#DDE2FF',
+          borderColor: '#9FA2B4',
+        },
         input: {
           fontSize: '16px',
           lineHeight: 'normal',
+        },
+      },
+      MuiOutlinedInput: {
+        notchedOutline: {
+          borderColor: '#9FA2B4',
         },
       },
       MuiButton: {
@@ -143,6 +154,11 @@ export default createMuiTheme(
           },
         },
       },
+      MuiFormHelperText: {
+        root: {
+          color: '#DDE2FF',
+        },
+      },
       MuiPickersDay: {
         dayLabel: {
           color: '#DDE2FF',
@@ -151,6 +167,12 @@ export default createMuiTheme(
           fontFamily: 'Nunito',
           '& .MuiTypography-colorInherit': {
             color: '#DDE2FF',
+          },
+        },
+        dayDisabled: {
+          fontFamily: 'Nunito',
+          '& .MuiTypography-colorInherit': {
+            color: 'black',
           },
         },
       },

@@ -13,6 +13,6 @@ export default (state = {}, action) => {
     // Store errorMessage
     // e.g. stores errorMessage when receiving GET_TODOS_FAILURE
     //      else clear errorMessage when receiving GET_TODOS_REQUEST
-    [requestName]: requestState === 'REJECTED' ? payload.message : '',
+    [requestName]: requestState === 'REJECTED' ? payload.error : '',
   }
 }

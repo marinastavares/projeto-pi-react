@@ -5,9 +5,10 @@ import { createReducer } from 'utils/redux'
 import { transformDate } from 'utils/helpers'
 import { GET_DME_INFO } from 'modules/dme/actions'
 
-import { GET_LABS, GET_LAB, SET_QUERY } from './actions'
+import { GET_LABS, GET_LAB, SET_QUERY, SET_CUSTOM_QUERY } from './actions'
 
 const INITIAL_STATE = {
+  allQueries: {},
   query: transformDate(1),
   names: [],
   currentLab: {},
@@ -56,6 +57,16 @@ const labs = createReducer(INITIAL_STATE, {
   [SET_QUERY]: (state, { payload }) =>
     produce(state, (previousState) => {
       previousState.query = payload === '' ? transformDate(1) : payload
+    }),
+  [SET_CUSTOM_QUERY]: (state, { payload }) =>
+    produce(state, (previousState) => {
+      previousState.allQueries = {
+        ...state.allQueries,
+        [payload.name]: {
+          initialDate: payload.initialDate,
+          finalDate: payload.initialDate,
+        },
+      }
     }),
 })
 

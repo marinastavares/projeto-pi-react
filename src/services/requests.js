@@ -50,7 +50,7 @@ export const get = () => (endpoint, params = null) =>
     .then(({ data }) => humps.camelizeKeys(data))
     .catch(handleResponseError)
 
-export const post = (key = null) => (endpoint, payload, applyHumps = true) =>
+export const post = (key = null) => (endpoint, payload, applyHumps = false) =>
   axios
     .post(
       API_URL.concat(endpoint),

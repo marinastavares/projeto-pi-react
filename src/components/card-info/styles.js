@@ -5,10 +5,15 @@ export default makeStyles(() => ({
     padding: '12px',
   },
   loading: {
-    margin: '16px',
+    margin: '8px',
   },
   width: {
     width: '80%',
     display: 'block',
+  },
+  title: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 24px',
+    alignItems: 'flex-start',
   },
 }))

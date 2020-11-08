@@ -16,10 +16,6 @@ export default makeStyles(({ palette }) => ({
   title: {
     margin: '1.6rem 0 0.8rem',
   },
-  content: {
-    padding: '0 2.4rem',
-    marginBottom: '3.2rem',
-  },
   textField: {
     '& .MuiOutlinedInput-input': {
       fontSize: '1.4rem',
@@ -39,6 +35,7 @@ export default makeStyles(({ palette }) => ({
   },
   picker: {
     color: palette.secondary.main,
+    margin: '8px',
     '& .MuiInputBase-input': {
       color: palette.secondary.main,
     },
@@ -57,5 +54,44 @@ export default makeStyles(({ palette }) => ({
     '& .MuiPickersBasePicker-pickerView': {
       backgroundColor: palette.secondary.dark,
     },
+  },
+  dayWrapper: {
+    position: 'relative',
+  },
+  day: {
+    width: 36,
+    height: 36,
+    margin: '0 2px',
+    color: 'inherit',
+    fontSize: '12px',
+  },
+  customDayHighlight: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: '2px',
+    right: '2px',
+    border: `1px solid ${palette.secondary.main}`,
+    borderRadius: '50%',
+  },
+  nonCurrentMonthDay: {
+    color: palette.text.disabled,
+  },
+  highlightNonCurrentMonthDay: {
+    color: '#676767',
+  },
+  highlight: {
+    background: palette.primary.main,
+    color: palette.common.white,
+  },
+  firstHighlight: {
+    extend: 'highlight',
+    borderTopLeftRadius: '50%',
+    borderBottomLeftRadius: '50%',
+  },
+  endHighlight: {
+    extend: 'highlight',
+    borderTopRightRadius: '50%',
+    borderBottomRightRadius: '50%',
   },
 }))

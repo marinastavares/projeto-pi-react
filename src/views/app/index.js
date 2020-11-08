@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import { Button, Grid, Divider, Typography, Select } from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
-import { useLocation } from '@reach/router'
+import { useLocation, Redirect } from '@reach/router'
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects'
 import PropTypes from 'prop-types'
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
@@ -9,10 +9,12 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { useDispatch, useSelector } from 'react-redux'
 import { formatDistance } from 'date-fns'
 import { pt } from 'date-fns/esm/locale'
+import EditIcon from '@material-ui/icons/Edit'
 
 import { getLabs, setQuery } from 'modules/labs/actions'
 import { menuSelector, labsSelector } from 'modules/labs/selectors'
 import { transformDate } from 'utils/helpers'
+import { useLocalStorage } from 'utils/hooks'
 
 import useStyles from './styles'
 import Navbar from './navbar'
@@ -44,6 +46,14 @@ const SELECT_OPTIONS = [
   },
 ]
 
+const NO_FILTER_INCLUDED = [
+  '/',
+  '/admin',
+  '/registrar-ambiente',
+  '/registrar-tecnico',
+]
+const PROTECTED_ROUTE = ['/admin', '/registrar-ambiente', '/registrar-tecnico']
+
 const App = ({ children }) => {
   const styles = useStyles()
   const location = useLocation()
@@ -51,6 +61,7 @@ const App = ({ children }) => {
   const menuItems = useSelector(menuSelector)
   const { currentLab } = useSelector(labsSelector)
   const dispatch = useDispatch()
+  const [isLoggedIn] = useLocalStorage('isLoggedIn')
 
   const handleClick = useCallback(
     (event) => {
@@ -69,7 +80,24 @@ const App = ({ children }) => {
 
   const currentHeader = useMemo(() => {
     const pathname = menuItems?.find((esp) => esp.route === location.pathname)
-    console.log('currentHeader -> menuItems', menuItems)
+    if (location.pathname === '/registrar-ambiente') {
+      return {
+        icon: <EditIcon className={styles.iconHeader} />,
+        title: 'Registrar Ambiente',
+      }
+    }
+    if (location.pathname === '/registrar-tecnico') {
+      return {
+        icon: <EditIcon className={styles.iconHeader} />,
+        title: 'Registrar Técnico',
+      }
+    }
+    if (location.pathname === '/admin') {
+      return {
+        icon: <EmojiObjectsIcon className={styles.iconHeader} />,
+        title: 'Configurações',
+      }
+    }
     if (pathname) {
       return {
         icon: <EmojiObjectsIcon className={styles.iconHeader} />,
@@ -91,6 +119,15 @@ const App = ({ children }) => {
   useEffect(() => {
     dispatch(getLabs())
   }, [dispatch])
+
+  const hasFilter = useMemo(
+    () => !NO_FILTER_INCLUDED.includes(location.pathname),
+    [location.pathname]
+  )
+
+  if (PROTECTED_ROUTE.includes(location.pathname) && !isLoggedIn) {
+    return <Redirect to="/login" noThrow />
+  }
 
   return (
     <Grid container className={styles.container}>
@@ -126,35 +163,37 @@ const App = ({ children }) => {
             </Grid>
             <Divider className={styles.dividerHeader} />
           </Grid>
-          <Grid container>
-            <Button
-              className={styles.headerButton}
-              color="secondary"
-              variant="outlined"
-            >
-              <SettingsOutlinedIcon />
-            </Button>
-            <Grid>
-              <Select
+          {hasFilter && (
+            <Grid container>
+              <Button
+                className={styles.headerButton}
                 color="secondary"
                 variant="outlined"
-                className={styles.selectDate}
-                displayEmpty
-                value={selectDate}
-                onChange={handleClick}
               >
-                {SELECT_OPTIONS.map((option) => (
-                  <MenuItem
-                    key={option.value}
-                    value={option.value}
-                    className={styles.menuItem}
-                  >
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
+                <SettingsOutlinedIcon />
+              </Button>
+              <Grid>
+                <Select
+                  color="secondary"
+                  variant="outlined"
+                  className={styles.selectDate}
+                  displayEmpty
+                  value={selectDate}
+                  onChange={handleClick}
+                >
+                  {SELECT_OPTIONS.map((option) => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                      className={styles.menuItem}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
             </Grid>
-          </Grid>
+          )}
         </Grid>
         {menuItems.length && (
           <Grid className={styles.children}>{children}</Grid>

@@ -105,21 +105,12 @@ const energy = createReducer(INITIAL_STATE, {
     }, {})
     return produce(state, (previousState) => {
       previousState.potWeekday = Object.entries(group).map((values) => {
-        const hours = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(
-          (value, index) => `${index}:00`
-        )
-        const dateValues = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(
-          () => `0`
-        )
         return {
           title: WEEKDAYS[values[0]],
-          date: [
-            ...hours,
-            ...values[1].map((value) => {
-              return format(new Date(value.date), 'dd/mm hh:mm')
-            }),
-          ],
-          value: [...dateValues, ...values[1].map((value) => value.wAvg)],
+          date: values[1].map((value) => {
+            return format(new Date(value.date), 'hh:mm')
+          }),
+          value: values[1].map((value) => value.wAvg),
         }
       })
     })

@@ -5,7 +5,7 @@ import FlashOnIcon from '@material-ui/icons/FlashOn'
 import { useDispatch, useSelector } from 'react-redux'
 import format from 'date-fns/format'
 
-import ModalTime from 'components/card-info/modal-time'
+// import ModalTime from 'components/card-info/modal-time'
 import {
   getMostEnergy,
   getEnergyAverage,
@@ -21,7 +21,7 @@ import {
   GET_PORCENTUAL_LAB,
   GET_WEEKLY_ENERGY,
 } from 'modules/energy/actions'
-import { mostUsedSelectors, energySelector } from 'modules/energy/selectors'
+import { energySelector } from 'modules/energy/selectors'
 import { querySelector } from 'modules/labs/selectors'
 import { useOnSuccessCall, usePrevious } from 'utils/hooks'
 import CardInfo from 'components/card-info'
@@ -105,6 +105,8 @@ const GeneralView = () => {
         title="Gasto total de energia"
         containerClassName={styles.energy}
         isLoading={isUsedLoading}
+        hasTime
+        name="totalEnergyMonth"
       >
         <FlashOnIcon color="primary" className={styles.icon} />
         <Typography component="p" variant="h2" color="secondary">
@@ -115,16 +117,20 @@ const GeneralView = () => {
         title="Gasto médio de energia"
         containerClassName={styles.energy}
         isLoading={average === 0 || isAverageLoading}
+        hasTime
+        name="average"
       >
         <FlashOnIcon color="primary" className={styles.icon} />
         <Typography component="p" variant="h1" color="secondary">
-          {average.toFixed(2)} kWh
+          {average?.toFixed(2)} kWh
         </Typography>
       </CardInfo>
       <CardInfo
         title="Pico de corrente"
         isLoading={!peakCurrent.lab || isPeakCurrentLoading}
         containerClassName={styles.peak}
+        hasTime
+        name="peakOfCurrent"
       >
         <PieChart
           className={styles.chartPeak}
@@ -161,12 +167,16 @@ const GeneralView = () => {
         title="Energia gasta da semana"
         className={styles.graph}
         isLoading={weeklyEnergy?.length === 0 || isWeeklyEnergyLoading}
+        hasTime
+        name="weeklyEnergy"
       >
         <ColumnChart value={weeklyEnergy} />
       </CardInfo>
       <CardInfo
         title="Porcentagem de energia consumida"
         isLoading={porcentual?.length === 0 || isPorcentualLoading}
+        hasTime
+        name="porcentual"
       >
         <DonutChart
           height={280}
@@ -179,6 +189,8 @@ const GeneralView = () => {
         title="Soma das potências por dia da semana"
         className={styles.graphComplete}
         isLoading={sumPotency?.length === 0 || isPorcentualLoading}
+        isWeekly
+        name="sumPotency"
       >
         <LineChart
           height={250}
@@ -191,6 +203,8 @@ const GeneralView = () => {
         title="Potência da semana"
         className={styles.graphComplete}
         isLoading={sumPotency?.length === 0 || isWeeklyPorcentualLoading}
+        isWeekly
+        name="potencyWeekly"
       >
         <LineChart
           height={250}
@@ -199,7 +213,6 @@ const GeneralView = () => {
           YValues={seriesWeekday}
         />
       </CardInfo>
-      <ModalTime />
     </Grid>
   )
 }

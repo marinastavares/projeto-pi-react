@@ -1,7 +1,7 @@
 import produce from 'immer'
 import { format } from 'date-fns'
 
-import { GET_LABS } from 'modules/labs/actions'
+import { GET_LABS, GET_ALL_LABS } from 'modules/labs/actions'
 import { createReducer } from 'utils/redux'
 
 import {
@@ -10,11 +10,28 @@ import {
   GET_DME_V,
   GET_DME_A,
   GET_DME_W,
+  CHANGE_STATUS_DME,
 } from './actions'
 
 const INITIAL_STATE = {
   labs: {},
   DME: {},
+}
+
+const groupByLab = (payload) => {
+  const group = payload.reduce((res, obj) => {
+    // for each object obj in the array arr
+    const key = obj.lab.toUpperCase() // let key be the concatination of locA and locB
+    const newObj = obj // create a new object based on the object obj
+    if (res[key])
+      // if res has a sub-array for the current key then...
+      res[key].push(newObj)
+    // ... push newObj into that sub-array                                                        // otherwise...
+    else res[key] = [newObj] // ... create a new sub-array for this key that initially contain newObj
+    return res
+  }, {})
+
+  return group
 }
 
 const groupByPhase = (payload, end) => {
@@ -117,6 +134,24 @@ const dme = createReducer(INITIAL_STATE, {
     return produce(state, (previousState) => {
       // eslint-disable-next-line no-param-reassign
       previousState.labs = labs
+    })
+  },
+  [GET_ALL_LABS.FULFILLED]: (state, { payload }) => {
+    const labs = groupByLab(payload)
+    return produce(state, (previousState) => {
+      // eslint-disable-next-line no-param-reassign
+      previousState.listAllLabs = labs
+    })
+  },
+  [CHANGE_STATUS_DME.FULFILLED]: (state, { meta }) => {
+    const find = state.listAllLabs[meta.lab].findIndex(
+      (map) => map.idDME === meta.idDME
+    )
+    return produce(state, (previousState) => {
+      // eslint-disable-next-line no-param-reassign
+      previousState.listAllLabs[meta.lab][find].status = !state.listAllLabs[
+        meta.lab
+      ][find].status
     })
   },
 })

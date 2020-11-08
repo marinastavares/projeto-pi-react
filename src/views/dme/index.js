@@ -19,7 +19,7 @@ import {
 } from 'modules/dme/actions'
 import { dmeSelector } from 'modules/dme/selectors'
 import { labsSelector } from 'modules/labs/selectors'
-import { useOnSuccessCall, usePrevious } from 'utils/hooks'
+import { useOnSuccessCall } from 'utils/hooks'
 import CardInfo from 'components/card-info'
 import LineChart from 'components/line-chart'
 import DonutChart from 'components/donut-chart'

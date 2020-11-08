@@ -9,62 +9,111 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  TextField,
 } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
-import {
-  DatePicker,
-  MuiPickersUtilsProvider,
-  DateRangePicker,
-} from '@material-ui/pickers'
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
 import ptLocale from 'date-fns/locale/pt'
+import classnames from 'classnames'
+import format from 'date-fns/format'
+import isValid from 'date-fns/isValid'
+import isSameDay from 'date-fns/isSameDay'
+import endOfWeek from 'date-fns/endOfWeek'
+import startOfWeek from 'date-fns/startOfWeek'
+import isWithinInterval from 'date-fns/isWithinInterval'
+import { useDispatch } from 'react-redux'
+
+import { setCustomQuery } from 'modules/labs/actions'
 
 import useStyles from './styles'
 
-const TimeModal = ({
-  title,
-  hasTextFieldDescription,
-  description,
-  buttonLabel,
-  onClose,
-  onSave,
-  placeholder,
-  isLoading,
-  previousValue,
-}) => {
+const makeJSDateObject = (date) => {
+  if (date instanceof Date) {
+    return new Date(date.getTime())
+  }
+
+  return date // handle case with invalid input
+}
+
+const TimeModal = ({ description, onClose, isLoading, isWeekly, name }) => {
   const styles = useStyles()
-  const [textValue, setValue] = useState(
-    hasTextFieldDescription ? { subject: '', comment: '' } : previousValue
-  )
   const [initialDate, handleInitialDateChange] = useState(new Date())
   const [finalDate, handleFinalDateChange] = useState(new Date())
+  const [week, setWeek] = useState(new Date())
+  const dispatch = useDispatch()
 
-  const onChange = useCallback(
-    (event) => {
-      const { value, name } = event.target
-      if (hasTextFieldDescription) {
-        setValue((prevValues) => ({ ...prevValues, [name]: value }))
-        return
-      }
-      setValue(value)
+  const handleWeek = useCallback((date) => {
+    setWeek(startOfWeek(makeJSDateObject(date)))
+  }, [])
+
+  const renderDay = useCallback(
+    (date, selectedDate, dayInCurrentMonth) => {
+      const dateClone = makeJSDateObject(date)
+      const selectedDateClone = makeJSDateObject(selectedDate)
+
+      const start = startOfWeek(selectedDateClone)
+      const end = endOfWeek(selectedDateClone)
+
+      const dayIsBetween = isWithinInterval(dateClone, { start, end })
+      const isFirstDay = isSameDay(dateClone, start)
+      const isLastDay = isSameDay(dateClone, end)
+
+      const wrapperClassName = classnames({
+        [styles.highlight]: dayIsBetween,
+        [styles.firstHighlight]: isFirstDay,
+        [styles.endHighlight]: isLastDay,
+      })
+
+      const dayClassName = classnames(styles.day, {
+        [styles.nonCurrentMonthDay]: !dayInCurrentMonth,
+        [styles.highlightNonCurrentMonthDay]:
+          !dayInCurrentMonth && dayIsBetween,
+      })
+
+      return (
+        <div className={wrapperClassName}>
+          <IconButton className={dayClassName}>
+            <span> {format(dateClone, 'd')} </span>
+          </IconButton>
+        </div>
+      )
     },
-    [hasTextFieldDescription]
+    [
+      styles.day,
+      styles.endHighlight,
+      styles.firstHighlight,
+      styles.highlight,
+      styles.highlightNonCurrentMonthDay,
+      styles.nonCurrentMonthDay,
+    ]
   )
 
-  const onClick = useCallback(() => {
-    onSave(textValue)
-  }, [onSave, textValue])
+  const formatWeekSelectLabel = useCallback((date, invalidLabel) => {
+    const dateClone = makeJSDateObject(date)
 
-  const multilineValue = hasTextFieldDescription ? textValue.comment : textValue
+    return dateClone && isValid(dateClone)
+      ? `Semana do ${format(startOfWeek(dateClone), 'd')}`
+      : invalidLabel
+  }, [])
+
+  const onSaveClick = useCallback(() => {
+    dispatch(
+      setCustomQuery({
+        name,
+        initialDate: initialDate.toISOString(),
+        finalDate: finalDate.toISOString(),
+      })
+    )
+    onClose()
+  }, [dispatch, finalDate, initialDate, name, onClose])
 
   return (
     <Dialog
       aria-labelledby="mudar-tempo-filtro"
       aria-describedby="descricao-da-modal"
-      open
       className={styles.dialog}
       onClose={onClose}
+      open
     >
       <DialogTitle
         component="header"
@@ -100,30 +149,52 @@ const TimeModal = ({
       </DialogTitle>
       <DialogContent className={styles.content}>
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
-          <DatePicker
-            format="dd/MM/yyyy"
-            label="Data inicial"
-            inputVariant="outlined"
-            value={initialDate}
-            onChange={handleInitialDateChange}
-            animateYearScrolling
-            color="secondary"
-            className={styles.picker}
-          />
-          <DatePicker
-            format="dd/MM/yyyy"
-            label="Data final"
-            inputVariant="outlined"
-            value={finalDate}
-            onChange={handleFinalDateChange}
-            animateYearScrolling
-            color="secondary"
-            className={styles.picker}
-          />
+          {isWeekly ? (
+            <DatePicker
+              label="Selecione uma semana"
+              value={week}
+              onChange={handleWeek}
+              renderDay={renderDay}
+              formatWeekSelectLabel={formatWeekSelectLabel}
+              inputVariant="outlined"
+              className={styles.picker}
+            />
+          ) : (
+            <>
+              <DatePicker
+                format="dd/MM/yyyy"
+                label="Data inicial"
+                inputVariant="outlined"
+                value={initialDate}
+                onChange={handleInitialDateChange}
+                animateYearScrolling
+                color="secondary"
+                className={styles.picker}
+                disableFuture
+                maxDate={finalDate}
+                maxDateMessage="Data inicial deve ser antes da final"
+                variant="inline"
+              />
+              <DatePicker
+                format="dd/MM/yyyy"
+                label="Data final"
+                inputVariant="outlined"
+                value={finalDate}
+                onChange={handleFinalDateChange}
+                animateYearScrolling
+                color="secondary"
+                className={styles.picker}
+                disableFuture
+                variant="inline"
+                minDate={initialDate}
+                minDateMessage="Data final deve ser depois da inicial"
+              />
+            </>
+          )}
         </MuiPickersUtilsProvider>
       </DialogContent>
       <DialogActions component="footer" className={styles.footer}>
-        <Button isLoading={isLoading} color="primary" onClick={onClick}>
+        <Button onClick={onSaveClick} isLoading={isLoading} color="primary">
           ALTERAR
         </Button>
       </DialogActions>
@@ -132,26 +203,18 @@ const TimeModal = ({
 }
 
 TimeModal.propTypes = {
-  title: PropTypes.string,
   description: PropTypes.string,
-  buttonLabel: PropTypes.string,
+  name: PropTypes.string,
   onClose: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
-  previousValue: PropTypes.string,
   isLoading: PropTypes.bool,
-  hasTextFieldDescription: PropTypes.bool,
+  isWeekly: PropTypes.bool,
 }
 
 TimeModal.defaultProps = {
-  title: '',
   description: '',
-  previousValue: '',
-  placeholder:
-    'Ex: O cliente gostou do imóvel e da localização e comentou que fará uma proposta.',
   isLoading: false,
-  buttonLabel: 'SALVAR',
-  hasTextFieldDescription: false,
+  isWeekly: false,
+  name: '',
 }
 
 export default React.memo(TimeModal)

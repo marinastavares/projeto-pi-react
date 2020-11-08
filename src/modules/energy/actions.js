@@ -19,42 +19,50 @@ export const GET_ENERGY_TOTAL = defineAction('GET_ENERGY_TOTAL', REQUEST)
 export const getMostEnergy = () => (dispatch, getState) => {
   dispatch({
     type: GET_ENERGY.ACTION,
-    payload: energyService.getMostEnergy(getState().labs.query),
+    payload: energyService.getMostEnergy(
+      getState().labs.allQueries?.totalEnergyMonth
+    ),
   })
 }
 
 export const getEnergyAverage = () => (dispatch, getState) => {
   dispatch({
     type: GET_ENERGY_AVERAGE.ACTION,
-    payload: energyService.getEnergyAverage(getState().labs.query),
+    payload: energyService.getEnergyAverage(getState().labs.allQueries.average),
   })
 }
 
 export const getPeakCurrent = () => (dispatch, getState) => {
   dispatch({
     type: GET_PEAK_CURRENT.ACTION,
-    payload: energyService.getPeakCurrent(getState().labs.query),
+    payload: energyService.getPeakCurrent(
+      getState().labs.allQueries.peakOfCurrent
+    ),
   })
 }
 
 export const getSumHour = () => (dispatch, getState) => {
   dispatch({
     type: GET_SUM_HOUR.ACTION,
-    payload: energyService.getSumHour(getState().labs.query),
+    payload: energyService.getSumHour(getState().labs.allQueries.peakOfCurrent),
   })
 }
 
 export const getPorcentualLab = () => (dispatch, getState) => {
   dispatch({
     type: GET_PORCENTUAL_LAB.ACTION,
-    payload: energyService.getPorcentualLab(getState().labs.query),
+    payload: energyService.getPorcentualLab(
+      getState().labs.allQueries.weeklyEnergy
+    ),
   })
 }
 
 export const getWeeklyEnergy = () => (dispatch, getState) => {
   dispatch({
     type: GET_WEEKLY_ENERGY.ACTION,
-    payload: energyService.getWeeklyEnergy(getState().labs.query),
+    payload: energyService.getWeeklyEnergy(
+      getState().labs.allQueries.weeklyEnergy
+    ),
   })
 }
 
