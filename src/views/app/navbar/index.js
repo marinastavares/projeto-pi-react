@@ -26,7 +26,7 @@ const Navbar = ({ menuItems, className }) => {
   return (
     <AppBar
       color="primary"
-      position="static"
+      position="fixed"
       className={classnames(className, styles.header)}
     >
       <Toolbar disableGutters className={styles.toolbar}>

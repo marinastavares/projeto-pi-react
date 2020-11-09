@@ -8,6 +8,7 @@ export default makeStyles(({ palette }) => ({
   },
   header: {
     backgroundColor: palette.sidebar,
+    width: '280px',
   },
   icon: {
     backgroundColor: palette.primary.main,

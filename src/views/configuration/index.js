@@ -65,7 +65,7 @@ const GeneralView = () => {
             className={styles.newLab}
             color="secondary"
             variant="outlined"
-            to="/registrar-recnico"
+            to="/registrar-tecnico"
             size="small"
           >
             Criar usuário
