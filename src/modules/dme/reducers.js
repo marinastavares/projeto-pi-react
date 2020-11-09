@@ -1,7 +1,6 @@
 import produce from 'immer'
-import { format } from 'date-fns'
 
-import { GET_LABS, GET_ALL_LABS } from 'modules/labs/actions'
+import { GET_LABS, GET_ALL_LABS, SET_QUERY } from 'modules/labs/actions'
 import { createReducer } from 'utils/redux'
 
 import {
@@ -16,6 +15,7 @@ import {
 const INITIAL_STATE = {
   labs: {},
   DME: {},
+  hasChanged: false,
 }
 
 const groupByLab = (payload) => {
@@ -49,13 +49,13 @@ const groupByPhase = (payload, end) => {
     else res[key] = [newObj] // ... create a new sub-array for this key that initially contain newObj
     return res
   }, {})
-  Object.keys(group).map((key) => {
-    group[key] = group[key].map((data) => ({
-      ...data,
-      [`date${end}`]: format(new Date(data[[`date${end}`]]), 'd/L H:mm'),
-    }))
-    return null
-  })
+  // Object.keys(group).map((key) => {
+  //   group[key] = group[key].map((data) => ({
+  //     ...data,
+  //     [`date${end}`]: format(new Date(data[[`date${end}`]]), 'd/L H:mm'),
+  //   }))
+  //   return null
+  // })
 
   return group
 }
@@ -77,52 +77,30 @@ const dme = createReducer(INITIAL_STATE, {
     const group = groupByPhase(payload, 'A')
     return produce(state, (previousState) => {
       // eslint-disable-next-line no-param-reassign
-      previousState.DME[meta.idDME].current = {
-        value: Object.keys(group).map((value) => ({
-          name: `Fase ${value}`,
-          data: group[value].map((data) => data.valueA),
-        })),
-        date: group[2].map((values) => values.dateA),
-      }
+      previousState.DME[meta.idDME].current = group
     })
   },
   [GET_DME_V.FULFILLED]: (state, { payload, meta }) => {
     const group = groupByPhase(payload, 'V')
     return produce(state, (previousState) => {
       // eslint-disable-next-line no-param-reassign
-      previousState.DME[meta.idDME].voltage = {
-        value: Object.keys(group).map((value) => ({
-          name: `Fase ${value}`,
-          data: group[value].map((data) => data.valueV),
-        })),
-        date: group[2].map((values) => values.dateV),
-      }
+      previousState.DME[meta.idDME].voltage = group
     })
   },
   [GET_DME_W.FULFILLED]: (state, { payload, meta }) => {
     const group = groupByPhase(payload, 'W')
     return produce(state, (previousState) => {
       // eslint-disable-next-line no-param-reassign
-      previousState.DME[meta.idDME].potency = {
-        value: Object.keys(group).map((value) => ({
-          name: `Fase ${value}`,
-          data: group[value].map((data) => data.valueW),
-        })),
-        date: group[2].map((values) => values.dateW),
-      }
+      previousState.DME[meta.idDME].potency = group
     })
   },
   [GET_DME_E.FULFILLED]: (state, { payload, meta }) => {
     const group = groupByPhase(payload, 'E')
     return produce(state, (previousState) => {
       // eslint-disable-next-line no-param-reassign
-      previousState.DME[meta.idDME].energy = {
-        value: Object.keys(group).map((value) => ({
-          name: `Fase ${value}`,
-          data: group[value].map((data) => data.valueE),
-        })),
-        date: group[2].map((values) => values.dateE),
-      }
+      previousState.hasChanged = false
+      // eslint-disable-next-line no-param-reassign
+      previousState.DME[meta.idDME].energy = group
     })
   },
   [GET_LABS.FULFILLED]: (state, { payload }) => {
@@ -141,6 +119,12 @@ const dme = createReducer(INITIAL_STATE, {
     return produce(state, (previousState) => {
       // eslint-disable-next-line no-param-reassign
       previousState.listAllLabs = labs
+    })
+  },
+  [SET_QUERY]: (state) => {
+    return produce(state, (previousState) => {
+      // eslint-disable-next-line no-param-reassign
+      previousState.hasChanged = true
     })
   },
   [CHANGE_STATUS_DME.FULFILLED]: (state, { meta }) => {

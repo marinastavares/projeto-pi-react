@@ -60,7 +60,8 @@ const RegisterUser = () => {
   }, [])
   const [isLoading, errorMessage] = useOnSuccessCall(
     CREATE_USER.ACTION,
-    handleSuccess
+    handleSuccess,
+    'Técnico registrado com sucesso'
   )
 
   const textFieldProps = useCallback(

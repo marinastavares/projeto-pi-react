@@ -49,15 +49,28 @@ const GeneralView = () => {
         <Typography color="secondary" variant="h6" className={styles.title}>
           Ambientes com os todos os idDMEs
         </Typography>
-        <Button
-          component={Link}
-          className={styles.newLab}
-          color="secondary"
-          variant="outlined"
-          to="/registrar-ambiente"
-        >
-          Criar novo ambiente
-        </Button>
+        <Grid>
+          <Button
+            component={Link}
+            className={styles.newLab}
+            color="secondary"
+            variant="outlined"
+            to="/registrar-ambiente"
+            size="small"
+          >
+            Criar ambiente
+          </Button>
+          <Button
+            component={Link}
+            className={styles.newLab}
+            color="secondary"
+            variant="outlined"
+            to="/registrar-recnico"
+            size="small"
+          >
+            Criar usuário
+          </Button>
+        </Grid>
       </Grid>
       {allLabs &&
         Object.entries(allLabs).map((values) => (

@@ -35,7 +35,14 @@ const makeJSDateObject = (date) => {
   return date // handle case with invalid input
 }
 
-const TimeModal = ({ description, onClose, isLoading, isWeekly, name }) => {
+const TimeModal = ({
+  description,
+  onClose,
+  isLoading,
+  isWeekly,
+  name,
+  action,
+}) => {
   const styles = useStyles()
   const [initialDate, handleInitialDateChange] = useState(new Date())
   const [finalDate, handleFinalDateChange] = useState(new Date())
@@ -105,7 +112,8 @@ const TimeModal = ({ description, onClose, isLoading, isWeekly, name }) => {
       })
     )
     onClose()
-  }, [dispatch, finalDate, initialDate, name, onClose])
+    dispatch(action())
+  }, [action, dispatch, finalDate, initialDate, name, onClose])
 
   return (
     <Dialog
@@ -208,6 +216,7 @@ TimeModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   isLoading: PropTypes.bool,
   isWeekly: PropTypes.bool,
+  action: PropTypes.func,
 }
 
 TimeModal.defaultProps = {
@@ -215,6 +224,7 @@ TimeModal.defaultProps = {
   isLoading: false,
   isWeekly: false,
   name: '',
+  action: () => {},
 }
 
 export default React.memo(TimeModal)

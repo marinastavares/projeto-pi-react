@@ -54,6 +54,10 @@ export default makeStyles(({ palette }) => ({
   graphComplete: {
     gridColumn: '1 / 4',
   },
+  content: {
+    marginLeft: '72px',
+
+  },
   background: {
     '& .apexcharts-canvas.apexcharts-theme-dark': {
       background: 'transparent',

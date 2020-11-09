@@ -11,6 +11,10 @@ export default makeStyles(() => ({
     width: '80%',
     display: 'block',
   },
+  filterLabel: {
+    width: '80%',
+    fontSize: '10px',
+  },
   title: {
     display: 'grid',
     gridTemplateColumns: '1fr 24px',

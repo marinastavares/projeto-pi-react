@@ -21,10 +21,13 @@ const CardInfo = ({
   name,
   isWeekly,
   hasTime,
+  action,
+  noGrid,
 }) => {
   const styles = useStyles()
-  const [isModalTime, handleModal] = useModal()
+  const [isModalTime, setModal] = useModal()
   const currentQuery = useSelector((state) => state.labs.allQueries[name])
+
   return (
     <>
       <Paper variant="outlined" className={classnames(styles.card, className)}>
@@ -40,7 +43,7 @@ const CardInfo = ({
             </Typography>
             {hasTime && (
               <Typography
-                className={styles.width}
+                className={styles.filterLabel}
                 component="span"
                 variant="subtitle2"
                 color="secondary"
@@ -59,7 +62,7 @@ const CardInfo = ({
           </Grid>
           {(hasTime || isWeekly) && (
             <Tooltip title="Editar tempo">
-              <IconButton onClick={handleModal} size="small" color="secondary">
+              <IconButton onClick={setModal} size="small" color="secondary">
                 <AccessAlarmIcon />
               </IconButton>
             </Tooltip>
@@ -78,7 +81,7 @@ const CardInfo = ({
           <Grid
             container
             alignItems="center"
-            justify="center"
+            justify={noGrid ? 'flex-start' : 'center'}
             className={containerClassName}
           >
             {children}
@@ -86,7 +89,12 @@ const CardInfo = ({
         )}
       </Paper>
       {isModalTime && (
-        <ModalTime name={name} isWeekly={isWeekly} onClose={handleModal} />
+        <ModalTime
+          name={name}
+          isWeekly={isWeekly}
+          onClose={setModal}
+          action={action}
+        />
       )}
     </>
   )
@@ -99,8 +107,10 @@ CardInfo.propTypes = {
   containerClassName: PropTypes.string,
   isLoading: PropTypes.bool,
   hasTime: PropTypes.bool,
+  noGrid: PropTypes.bool,
   isWeekly: PropTypes.bool,
   children: PropTypes.node.isRequired,
+  action: PropTypes.func.isRequired,
 }
 
 CardInfo.defaultProps = {
@@ -111,5 +121,6 @@ CardInfo.defaultProps = {
   isLoading: false,
   hasTime: false,
   isWeekly: false,
+  noGrid: false,
 }
 export default React.memo(CardInfo)

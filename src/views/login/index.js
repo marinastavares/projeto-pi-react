@@ -43,11 +43,15 @@ const Login = () => {
     },
   })
   const { errors, values, touched, handleSubmit, handleChange } = formik
-  const handleSucces = useCallback(() => {
+  const handleSuccess = useCallback(() => {
     setStoredValue(true)
     navigate('/admin')
   }, [setStoredValue])
-  const [isLoading, errorMessage] = useOnSuccessCall(LOGIN.ACTION, handleSucces)
+  const [isLoading, errorMessage] = useOnSuccessCall(
+    LOGIN.ACTION,
+    handleSuccess,
+    'Login Realizado com sucesso'
+  )
 
   const textFieldProps = useCallback(
     (name) => ({

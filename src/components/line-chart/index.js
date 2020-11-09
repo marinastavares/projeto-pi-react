@@ -20,18 +20,24 @@ const LineChart = ({ YValues, XValues, height, width }) => {
           enabled: true,
           autoScaleYaxis: true,
         },
-      },
-      legend: {
-        fontFamily: 'Nunito',
+        toolbar: {
+          autoSelected: 'zoom',
+        },
       },
       dataLabels: {
         enabled: false,
+      },
+      legend: {
+        fontFamily: 'Nunito',
       },
       markers: {
         size: 0,
       },
       title: {
         align: 'left',
+      },
+      xaxis: {
+        type: 'datetime',
       },
       fill: {
         type: 'gradient',

@@ -17,13 +17,13 @@ import {
   GET_DME_W,
   getDmeE,
 } from 'modules/dme/actions'
-import { dmeSelector } from 'modules/dme/selectors'
+import { dmeSelector, hasChangedSelector } from 'modules/dme/selectors'
 import { labsSelector } from 'modules/labs/selectors'
 import { useOnSuccessCall } from 'utils/hooks'
 import CardInfo from 'components/card-info'
-import LineChart from 'components/line-chart'
 import DonutChart from 'components/donut-chart'
 import ColumnChart from 'components/column-chart'
+import MultipleLineChart from 'components/multiple-chart'
 
 import useStyles from './styles'
 
@@ -39,6 +39,7 @@ const DMEView = () => {
   const styles = useStyles()
   const { labs } = useSelector(labsSelector)
   const listDMEs = useSelector(dmeSelector)
+  const hasChanged = useSelector(hasChangedSelector)
   const dispatch = useDispatch()
   const { lab } = useParams()
   const [value, setValue] = useState(0)
@@ -62,6 +63,11 @@ const DMEView = () => {
       dispatch(getDMEInfo(currentDMEId))
     }
   }, [currentDMEId, dispatch, lab, listDMEs])
+  useEffect(() => {
+    if (hasChanged) {
+      dispatch(getDMEInfo(currentDMEId))
+    }
+  }, [currentDMEId, dispatch, hasChanged])
 
   const currentAction = useCallback(() => {
     if (currentDME?.disabled) {
@@ -146,48 +152,92 @@ const DMEView = () => {
           title="Gráfico de corrente em cada fase"
           isLoading={!currentDME?.current}
           className={styles.graphComplete}
+          noGrid
+          containerClassName={styles.content}
         >
-          <LineChart
-            height={250}
-            width={700}
-            XValues={currentDME?.current?.date}
-            YValues={currentDME?.current?.value}
+          <MultipleLineChart
+            phaseOne={currentDME?.current?.['1']?.map((current) => ({
+              x: new Date(current.dateA),
+              y: current.valueA,
+            }))}
+            phaseTwo={currentDME?.current?.['2']?.map((current) => ({
+              x: new Date(current.dateA),
+              y: current.valueA,
+            }))}
+            phaseThree={currentDME?.current?.['3']?.map((current) => ({
+              x: new Date(current.dateA),
+              y: current.valueA,
+            }))}
+            unit="A"
           />
         </CardInfo>
         <CardInfo
           title="Gráfico de tensão em cada fase"
           isLoading={!currentDME?.voltage}
           className={styles.graphComplete}
+          noGrid
+          containerClassName={styles.content}
         >
-          <LineChart
-            height={250}
-            width={700}
-            XValues={currentDME?.voltage?.date}
-            YValues={currentDME?.voltage?.value}
+          <MultipleLineChart
+            phaseOne={currentDME?.voltage?.['1']?.map((current) => ({
+              x: new Date(current.dateV),
+              y: current.valueV,
+            }))}
+            phaseTwo={currentDME?.voltage?.['2']?.map((current) => ({
+              x: new Date(current.dateV),
+              y: current.valueV,
+            }))}
+            phaseThree={currentDME?.voltage?.['3']?.map((current) => ({
+              x: new Date(current.dateV),
+              y: current.valueV,
+            }))}
+            unit="V"
           />
         </CardInfo>
         <CardInfo
           title="Gráfico de potência em cada fase"
           isLoading={!currentDME?.potency}
           className={styles.graphComplete}
+          noGrid
+          containerClassName={styles.content}
         >
-          <LineChart
-            height={250}
-            width={700}
-            XValues={currentDME?.potency?.date}
-            YValues={currentDME?.potency?.value}
+          <MultipleLineChart
+            phaseOne={currentDME?.potency?.['1']?.map((potency) => ({
+              x: new Date(potency.dateW),
+              y: potency.valueW,
+            }))}
+            phaseTwo={currentDME?.potency?.['2']?.map((potency) => ({
+              x: new Date(potency.dateW),
+              y: potency.valueW,
+            }))}
+            phaseThree={currentDME?.potency?.['3']?.map((potency) => ({
+              x: new Date(potency.dateW),
+              y: potency.valueW,
+            }))}
+            unit="W"
           />
         </CardInfo>
         <CardInfo
           title="Gráfico de energia em cada fase"
           isLoading={!currentDME?.energy}
           className={styles.graphComplete}
+          noGrid
+          containerClassName={styles.content}
         >
-          <LineChart
-            height={250}
-            width={700}
-            XValues={currentDME?.energy?.date}
-            YValues={currentDME?.energy?.value}
+          <MultipleLineChart
+            phaseOne={currentDME?.energy?.['1']?.map((energy) => ({
+              x: new Date(energy.dateE),
+              y: energy.valueE,
+            }))}
+            phaseTwo={currentDME?.energy?.['2']?.map((energy) => ({
+              x: new Date(energy.dateE),
+              y: energy.valueE,
+            }))}
+            phaseThree={currentDME?.energy?.['3']?.map((energy) => ({
+              x: new Date(energy.dateE),
+              y: energy.valueE,
+            }))}
+            unit="kWh"
           />
         </CardInfo>
       </>
@@ -196,18 +246,12 @@ const DMEView = () => {
     currentDME,
     currentDME?.disabled,
     currentDME?.energy,
-    currentDME?.energy?.date,
-    currentDME?.energy?.value,
     currentDME?.lastA?.map,
     currentDME?.lastV?.map,
     currentDME?.perc?.length,
     currentDME?.perc?.map,
     currentDME?.potency,
-    currentDME?.potency?.date,
-    currentDME?.potency?.value,
     currentDME?.voltage,
-    currentDME?.voltage?.date,
-    currentDME?.voltage?.value,
     isLoading,
     listDMEs,
     styles.graphComplete,

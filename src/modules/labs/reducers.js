@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   query: transformDate(1),
   names: [],
   currentLab: {},
+  hasChanged: false,
 }
 
 const groupByLab = (payload) => {
@@ -64,7 +65,7 @@ const labs = createReducer(INITIAL_STATE, {
         ...state.allQueries,
         [payload.name]: {
           initialDate: payload.initialDate,
-          finalDate: payload.initialDate,
+          finalDate: payload.finalDate,
         },
       }
     }),

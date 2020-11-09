@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { Grid, Typography } from '@material-ui/core'
 import { PieChart } from 'react-minimal-pie-chart'
 import FlashOnIcon from '@material-ui/icons/FlashOn'
 import { useDispatch, useSelector } from 'react-redux'
 import format from 'date-fns/format'
 
-// import ModalTime from 'components/card-info/modal-time'
 import {
   getMostEnergy,
   getEnergyAverage,
@@ -22,8 +21,8 @@ import {
   GET_WEEKLY_ENERGY,
 } from 'modules/energy/actions'
 import { energySelector } from 'modules/energy/selectors'
-import { querySelector } from 'modules/labs/selectors'
-import { useOnSuccessCall, usePrevious } from 'utils/hooks'
+import { allQueriesSelector } from 'modules/labs/selectors'
+import { useOnSuccessCall } from 'utils/hooks'
 import CardInfo from 'components/card-info'
 import LineChart from 'components/line-chart'
 import DonutChart from 'components/donut-chart'
@@ -31,11 +30,17 @@ import ColumnChart from 'components/column-chart'
 
 import useStyles from './styles'
 
+const QUERIES = {
+  TOTAL_ENERGY_MONTH: 'totalEnergyMonth',
+  AVERAGE: 'average',
+  PEAK_OF_CURRENT: 'peakOfCurrent',
+  WEEKLY_ENERGY: 'weeklyEnergy',
+  SUM_POTENCY: 'sumPotency',
+  POTENCY_WEEKLY: 'potencyWeekly',
+}
+
 const GeneralView = () => {
   const styles = useStyles()
-  // const mostUsed = useSelector(mostUsedSelectors)
-  const query = useSelector(querySelector)
-  const lastQuery = usePrevious(query)
   const {
     totalEnergyMonth,
     sumPotency,
@@ -46,23 +51,49 @@ const GeneralView = () => {
     potWeekday,
   } = useSelector(energySelector)
   const dispatch = useDispatch()
+  const allQueries = useSelector(allQueriesSelector)
 
   useEffect(() => {
     dispatch(getMostEnergy())
   }, [dispatch])
 
-  useEffect(() => {
-    if (query?.finalDate !== lastQuery?.finalDate) {
-      dispatch(getMostEnergy())
+  const averageAction = useCallback(() => {
+    if (allQueries?.[QUERIES.TOTAL_ENERGY_MONTH]) {
+      return
     }
-  }, [dispatch, lastQuery?.finalDate, query?.finalDate])
+    dispatch(getEnergyAverage())
+  }, [allQueries, dispatch])
 
-  const averageAction = () => dispatch(getEnergyAverage())
-  const peakCurrentAction = () => dispatch(getPeakCurrent())
-  const weeklyEnergyAction = () => dispatch(getWeeklyEnergy())
-  const sumHourAction = () => dispatch(getSumHour())
-  const porcentualLab = () => dispatch(getPorcentualLab())
-  const weeklyPorcentualAction = () => dispatch(getWeeklyPorcentual())
+  const peakCurrentAction = useCallback(() => {
+    if (allQueries?.[QUERIES.AVERAGE]) {
+      return
+    }
+    dispatch(getPeakCurrent())
+  }, [allQueries, dispatch])
+  const weeklyEnergyAction = useCallback(() => {
+    if (allQueries?.[QUERIES.PEAK_OF_CURRENT]) {
+      return
+    }
+    dispatch(getWeeklyEnergy())
+  }, [allQueries, dispatch])
+  const sumHourAction = useCallback(() => {
+    if (allQueries?.[QUERIES.WEEKLY_ENERGY]) {
+      return
+    }
+    dispatch(getSumHour())
+  }, [allQueries, dispatch])
+  const porcentualLab = useCallback(() => {
+    if (allQueries?.[QUERIES.SUM_POTENCY]) {
+      return
+    }
+    dispatch(getPorcentualLab())
+  }, [allQueries, dispatch])
+  const weeklyPorcentualAction = useCallback(() => {
+    if (allQueries?.[QUERIES.POTENCY_WEEKLY]) {
+      return
+    }
+    dispatch(getWeeklyPorcentual())
+  }, [allQueries, dispatch])
 
   const [isUsedLoading] = useOnSuccessCall(GET_ENERGY.ACTION, averageAction)
   const [isAverageLoading] = useOnSuccessCall(
@@ -96,9 +127,6 @@ const GeneralView = () => {
     data: value.value,
   }))
 
-  // if (!mostUsed.length) {
-  //   return null
-  // }
   return (
     <Grid className={styles.container}>
       <CardInfo
@@ -106,7 +134,8 @@ const GeneralView = () => {
         containerClassName={styles.energy}
         isLoading={isUsedLoading}
         hasTime
-        name="totalEnergyMonth"
+        name={QUERIES.TOTAL_ENERGY_MONTH}
+        action={getMostEnergy}
       >
         <FlashOnIcon color="primary" className={styles.icon} />
         <Typography component="p" variant="h2" color="secondary">
@@ -118,7 +147,8 @@ const GeneralView = () => {
         containerClassName={styles.energy}
         isLoading={average === 0 || isAverageLoading}
         hasTime
-        name="average"
+        name={QUERIES.AVERAGE}
+        action={getEnergyAverage}
       >
         <FlashOnIcon color="primary" className={styles.icon} />
         <Typography component="p" variant="h1" color="secondary">
@@ -127,10 +157,11 @@ const GeneralView = () => {
       </CardInfo>
       <CardInfo
         title="Pico de corrente"
-        isLoading={!peakCurrent.lab || isPeakCurrentLoading}
+        isLoading={!peakCurrent.slug || isPeakCurrentLoading}
         containerClassName={styles.peak}
         hasTime
-        name="peakOfCurrent"
+        name={QUERIES.PEAK_OF_CURRENT}
+        action={getPeakCurrent}
       >
         <PieChart
           className={styles.chartPeak}
@@ -160,7 +191,7 @@ const GeneralView = () => {
           {peakCurrent.date && format(new Date(peakCurrent.date), 'dd/M hh:mm')}
         </Typography>
         <Typography component="p" variant="h4" color="secondary">
-          {peakCurrent?.lab?.toUpperCase()}
+          {peakCurrent?.slug?.toUpperCase()}
         </Typography>
       </CardInfo>
       <CardInfo
@@ -168,7 +199,8 @@ const GeneralView = () => {
         className={styles.graph}
         isLoading={weeklyEnergy?.length === 0 || isWeeklyEnergyLoading}
         hasTime
-        name="weeklyEnergy"
+        name={QUERIES.WEEKLY_ENERGY}
+        action={getSumHour}
       >
         <ColumnChart value={weeklyEnergy} />
       </CardInfo>
@@ -190,7 +222,8 @@ const GeneralView = () => {
         className={styles.graphComplete}
         isLoading={sumPotency?.length === 0 || isPorcentualLoading}
         isWeekly
-        name="sumPotency"
+        name={QUERIES.SUM_POTENCY}
+        action={getPorcentualLab}
       >
         <LineChart
           height={250}
@@ -204,7 +237,8 @@ const GeneralView = () => {
         className={styles.graphComplete}
         isLoading={sumPotency?.length === 0 || isWeeklyPorcentualLoading}
         isWeekly
-        name="potencyWeekly"
+        name={QUERIES.POTENCY_WEEKLY}
+        action={getWeeklyPorcentual}
       >
         <LineChart
           height={250}

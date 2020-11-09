@@ -65,12 +65,13 @@ const RegisterLocation = () => {
     },
   })
   const { errors, values, touched, handleSubmit, handleChange } = formik
-  const handleSucces = useCallback(() => {
+  const handleSuccess = useCallback(() => {
     navigate('/admin')
   }, [])
   const [isLoading, errorMessage] = useOnSuccessCall(
     CREATE_LABS.ACTION,
-    handleSucces
+    handleSuccess,
+    'Ambiente cadastrado com sucesso'
   )
 
   const textFieldProps = useCallback(

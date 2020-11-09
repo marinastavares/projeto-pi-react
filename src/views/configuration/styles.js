@@ -16,5 +16,6 @@ export default makeStyles((theme) => ({
   },
   newLab: {
     height: '3.2rem',
+    margin: '0 8px',
   },
 }))
