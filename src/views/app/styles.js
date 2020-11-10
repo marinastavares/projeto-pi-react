@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 
-export default makeStyles(({ palette }) => ({
+export default makeStyles(({ palette, breakpoints }) => ({
   container: {
     height: '100%',
     display: 'grid',
@@ -8,6 +8,9 @@ export default makeStyles(({ palette }) => ({
     gridTemplateRows: '100vh',
     fontFamily: 'Nunito',
     backgroundColor: palette.background,
+    [breakpoints.down('sm')]: {
+      gridTemplateColumns: '1fr',
+    },
   },
   content: {
     display: 'grid',
@@ -17,16 +20,31 @@ export default makeStyles(({ palette }) => ({
     backgroundColor: palette.background,
     height: 'fit-content',
     gridColumn: 2,
+
+    [breakpoints.down('sm')]: {
+      gridColumn: 1,
+      padding: 12,
+      gridRowGap: '16px',
+    },
   },
   title: {
     display: 'flex',
     alignItems: 'center',
     lineHeight: 2,
+
+    [breakpoints.down('sm')]: {
+      fontSize: '24px',
+    },
   },
   iconHeader: {
     height: '36px',
     width: '36px',
     marginRight: '16px',
+
+    [breakpoints.down('sm')]: {
+      height: '24px',
+      width: '24px',
+    },
   },
   dividerHeader: {
     backgroundColor: palette.secondary.main,
@@ -86,5 +104,44 @@ export default makeStyles(({ palette }) => ({
     left: 0,
     overflowX: 'hidden',
     width: '260px',
+
+    '& .MuiAppBar-positionFixed': {
+      left: 0,
+      right: 'auto',
+
+      [breakpoints.down('sm')]: {
+        bottom: 0,
+      },
+    },
+
+    [breakpoints.down('sm')]: {
+      display: 'none',
+    },
+  },
+  navbarCell: {
+    zIndex: 20,
+    height: '100%',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    overflowX: 'hidden',
+    width: '260px',
+
+    '& .MuiAppBar-positionFixed': {
+      left: 0,
+      right: 'auto',
+
+      [breakpoints.down('sm')]: {
+        bottom: 0,
+      },
+    },
+  },
+  headerBar: {
+    height: '64px',
+    backgroundColor: '#20263C',
+
+    [breakpoints.up('sm')]: {
+      display: 'none',
+    },
   },
 }))

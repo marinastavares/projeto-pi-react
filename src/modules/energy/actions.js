@@ -1,6 +1,7 @@
 import { defineAction } from 'redux-define'
 
 import * as energyService from 'services/energy'
+import { QUERIES } from 'utils/helpers'
 
 const REQUEST = ['PENDING', 'FULFILLED', 'REJECTED', 'COUNT']
 
@@ -16,11 +17,20 @@ export const GET_WEEKLY_PORCENTUAL = defineAction(
 )
 export const GET_ENERGY_TOTAL = defineAction('GET_ENERGY_TOTAL', REQUEST)
 
+// export const QUERIES = {
+//   TOTAL_ENERGY_MONTH: 'totalEnergyMonth',
+//   AVERAGE: 'average',
+//   PEAK_OF_CURRENT: 'peakOfCurrent',
+//   WEEKLY_ENERGY: 'weeklyEnergy',
+//   SUM_POTENCY: 'sumPotency',
+//   POTENCY_WEEKLY: 'potencyWeekly',
+// }
+
 export const getMostEnergy = () => (dispatch, getState) => {
   dispatch({
     type: GET_ENERGY.ACTION,
     payload: energyService.getMostEnergy(
-      getState().labs.allQueries?.totalEnergyMonth
+      getState().labs.allQueries?.[QUERIES.TOTAL_ENERGY_MONTH]
     ),
   })
 }
@@ -28,7 +38,9 @@ export const getMostEnergy = () => (dispatch, getState) => {
 export const getEnergyAverage = () => (dispatch, getState) => {
   dispatch({
     type: GET_ENERGY_AVERAGE.ACTION,
-    payload: energyService.getEnergyAverage(getState().labs.allQueries.average),
+    payload: energyService.getEnergyAverage(
+      getState().labs.allQueries?.[QUERIES.AVERAGE]
+    ),
   })
 }
 
@@ -36,7 +48,7 @@ export const getPeakCurrent = () => (dispatch, getState) => {
   dispatch({
     type: GET_PEAK_CURRENT.ACTION,
     payload: energyService.getPeakCurrent(
-      getState().labs.allQueries.peakOfCurrent
+      getState().labs.allQueries?.[QUERIES.PEAK_OF_CURRENT]
     ),
   })
 }
@@ -44,7 +56,9 @@ export const getPeakCurrent = () => (dispatch, getState) => {
 export const getSumHour = () => (dispatch, getState) => {
   dispatch({
     type: GET_SUM_HOUR.ACTION,
-    payload: energyService.getSumHour(getState().labs.allQueries.peakOfCurrent),
+    payload: energyService.getSumHour(
+      getState().labs.allQueries?.[QUERIES.SUM_POTENCY]
+    ),
   })
 }
 
@@ -52,7 +66,7 @@ export const getPorcentualLab = () => (dispatch, getState) => {
   dispatch({
     type: GET_PORCENTUAL_LAB.ACTION,
     payload: energyService.getPorcentualLab(
-      getState().labs.allQueries.weeklyEnergy
+      getState().labs.allQueries?.[QUERIES.PERCENTAGE_ENERGY]
     ),
   })
 }
@@ -61,7 +75,7 @@ export const getWeeklyEnergy = () => (dispatch, getState) => {
   dispatch({
     type: GET_WEEKLY_ENERGY.ACTION,
     payload: energyService.getWeeklyEnergy(
-      getState().labs.allQueries.weeklyEnergy
+      getState().labs.allQueries?.[QUERIES.WEEKLY_ENERGY]
     ),
   })
 }
@@ -69,7 +83,9 @@ export const getWeeklyEnergy = () => (dispatch, getState) => {
 export const getWeeklyPorcentual = () => (dispatch, getState) => {
   dispatch({
     type: GET_WEEKLY_PORCENTUAL.ACTION,
-    payload: energyService.getWeeklyPorcentual(getState().labs.query),
+    payload: energyService.getWeeklyPorcentual(
+      getState().labs.allQueries?.[QUERIES.POTENCY_WEEKLY]
+    ),
   })
 }
 

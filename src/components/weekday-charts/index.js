@@ -4,24 +4,38 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
+import { useWindowSize } from 'utils/hooks'
+
 import CanvasJSReact from './canvasjs.react.js'
 
 const { CanvasJS } = CanvasJSReact
 const { CanvasJSChart } = CanvasJSReact
 
+const PALETTE = [
+  '#A300D6	',
+  '#7D02EB',
+  '#5653FE',
+  '#2983FF',
+  '#00B1F2',
+  '#2B908F',
+  '	#F9A3A4',
+  '	#90EE7E',
+  '#FA4443',
+  '#69D2E7',
+]
 class App extends Component {
   static propTypes = {
-    phaseOne: PropTypes.arrayOf(PropTypes.shape({})),
-    phaseTwo: PropTypes.arrayOf(PropTypes.shape({})),
-    phaseThree: PropTypes.arrayOf(PropTypes.shape({})),
+    dataValues: PropTypes.arrayOf(PropTypes.shape({})),
+    isString: PropTypes.bool,
+    isMobile: PropTypes.bool,
     unit: PropTypes.string,
   }
 
   static defaultProps = {
-    phaseOne: [],
-    phaseTwo: [],
-    phaseThree: [],
+    dataValues: [],
     unit: '',
+    isString: false,
+    isMobile: false,
   }
 
   constructor(props) {
@@ -44,8 +58,8 @@ class App extends Component {
       backgroundColor: '#20263C',
       animationEnabled: true,
       zoomEnabled: true,
-      height: 250,
-      width: 700,
+      width: this.props.isMobile ? 320 : 700,
+      height: this.props.isMobile ? 350 : 250,
       // title: {
       //   text: 'Units Sold VS Profit',
       //   fontFamily: 'Nunito',
@@ -57,9 +71,10 @@ class App extends Component {
         labelFontColor: '#DDE2FF',
         tickColor: '#DDE2FF',
         fontFamily: 'Nunito',
+        valueFormatString: this.props.isString ? "##':00'" : 'DD/MM HH:mm',
       },
       axisY: {
-        title: 'Resultados por fase',
+        title: 'Resultados',
         titleFontColor: '#DDE2FF',
         lineColor: '#DDE2FF',
         labelFontColor: '#DDE2FF',
@@ -73,38 +88,14 @@ class App extends Component {
         cursor: 'pointer',
         itemclick: this.toggleDataSeries,
       },
-      data: [
-        {
-          type: 'spline',
-          name: 'Fase 1',
-          showInLegend: true,
-          xValueFormatString: 'DD/MM HH:mm',
-          yValueFormatString: `###,### ${this.props.unit}`,
-          dataPoints: this.props.phaseOne,
-          color: '#00B1F2',
-          legendMarkerColor: '#00B1F2',
-          lineThickness: 1.5,
-        },
-        {
-          type: 'spline',
-          name: 'Fase 2',
-          showInLegend: true,
-          xValueFormatString: 'DD/MM HH:mm',
-          yValueFormatString: `###,### ${this.props.unit}`,
-          dataPoints: this.props.phaseTwo,
-          color: '#5653FE',
-          legendMarkerColor: '#5653FE',
-        },
-        {
-          type: 'spline',
-          name: 'Fase 3',
-          showInLegend: true,
-          xValueFormatString: 'DD/MM HH:mm',
-          yValueFormatString: `###,### ${this.props.unit}`,
-          dataPoints: this.props.phaseThree,
-          color: '#A300D6',
-        },
-      ],
+      data: this.props.dataValues?.map((values, index) => ({
+        dataPoints: values.map(({ x, y }) => ({ x, y })),
+        type: 'spline',
+        name: values[0].name,
+        yValueFormatString: `###,### ${this.props.unit}`,
+        color: PALETTE[index],
+        showInLegend: true,
+      })),
     }
     return (
       <div>

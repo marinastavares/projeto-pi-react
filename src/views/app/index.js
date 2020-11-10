@@ -1,16 +1,26 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react'
-import { Button, Grid, Divider, Typography, Select } from '@material-ui/core'
+import {
+  Grid,
+  Divider,
+  Typography,
+  Select,
+  AppBar,
+  Toolbar,
+  IconButton,
+  SwipeableDrawer,
+} from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import { useLocation, Redirect } from '@reach/router'
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects'
 import PropTypes from 'prop-types'
-import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
 import MenuItem from '@material-ui/core/MenuItem'
 import { useDispatch, useSelector } from 'react-redux'
 import { formatDistance } from 'date-fns'
 import { pt } from 'date-fns/esm/locale'
 import EditIcon from '@material-ui/icons/Edit'
+import MenuIcon from '@material-ui/icons/Menu'
 
+import Loading from 'components/loading'
 import { getLabs, setQuery } from 'modules/labs/actions'
 import { menuSelector, labsSelector } from 'modules/labs/selectors'
 import { transformDate } from 'utils/helpers'
@@ -62,6 +72,11 @@ const App = ({ children }) => {
   const { currentLab } = useSelector(labsSelector)
   const dispatch = useDispatch()
   const [isLoggedIn] = useLocalStorage('isLoggedIn')
+  const [open, setOpen] = useState(false)
+
+  const handleDrawerClose = () => {
+    setOpen((prevState) => !prevState)
+  }
 
   const handleClick = useCallback(
     (event) => {
@@ -130,76 +145,111 @@ const App = ({ children }) => {
   }
 
   return (
-    <Grid container className={styles.container}>
-      <Navbar menuItems={menuItems} className={styles.navbar} />
-      <Grid className={styles.content}>
-        <Grid className={styles.header}>
-          <Grid>
-            <Grid container justify="space-between" alignItems="flex-end">
-              <Typography
-                component="h1"
-                variant="h1"
-                color="secondary"
-                className={styles.title}
-              >
-                {currentHeader.icon}
-                {currentHeader.title}
-              </Typography>
-              {showLastUpdate ? (
+    <>
+      <AppBar className={styles.headerBar} position="static">
+        <Toolbar>
+          <IconButton
+            edge="start"
+            className={styles.menuButton}
+            color="inherit"
+            aria-label="menu"
+            onClick={handleDrawerClose}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" className={styles.title}>
+            LMM
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
+      <Grid container className={styles.container}>
+        <Navbar menuItems={menuItems} className={styles.navbar} />
+        <Grid className={styles.content}>
+          <Grid className={styles.header}>
+            <Grid>
+              <Grid container justify="space-between" alignItems="flex-end">
                 <Typography
-                  component="p"
-                  variant="h4"
+                  component="h1"
+                  variant="h1"
                   color="secondary"
                   className={styles.title}
                 >
-                  última atualização há{' '}
-                  {formatDistance(new Date(currentLab.updatedAt), new Date(), {
-                    locale: pt,
-                  })}
+                  {currentHeader.icon}
+                  {currentHeader.title}
                 </Typography>
-              ) : (
-                ''
-              )}
+                {showLastUpdate ? (
+                  <Typography
+                    component="p"
+                    variant="h4"
+                    color="secondary"
+                    className={styles.title}
+                  >
+                    última atualização há{' '}
+                    {formatDistance(
+                      new Date(currentLab.updatedAt),
+                      new Date(),
+                      {
+                        locale: pt,
+                      }
+                    )}
+                  </Typography>
+                ) : (
+                  ''
+                )}
+              </Grid>
+              <Divider className={styles.dividerHeader} />
             </Grid>
-            <Divider className={styles.dividerHeader} />
-          </Grid>
-          {hasFilter && (
-            <Grid container>
-              <Button
-                className={styles.headerButton}
-                color="secondary"
-                variant="outlined"
-              >
-                <SettingsOutlinedIcon />
-              </Button>
-              <Grid>
-                <Select
+            {hasFilter && (
+              <Grid container>
+                {/* <Button
+                  className={styles.headerButton}
                   color="secondary"
                   variant="outlined"
-                  className={styles.selectDate}
-                  displayEmpty
-                  value={selectDate}
-                  onChange={handleClick}
                 >
-                  {SELECT_OPTIONS.map((option) => (
-                    <MenuItem
-                      key={option.value}
-                      value={option.value}
-                      className={styles.menuItem}
-                    >
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  <SettingsOutlinedIcon />
+                </Button> */}
+                <Grid>
+                  <Select
+                    color="secondary"
+                    variant="outlined"
+                    className={styles.selectDate}
+                    displayEmpty
+                    value={selectDate}
+                    onChange={handleClick}
+                  >
+                    {SELECT_OPTIONS.map((option) => (
+                      <MenuItem
+                        key={option.value}
+                        value={option.value}
+                        className={styles.menuItem}
+                      >
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
               </Grid>
-            </Grid>
+            )}
+          </Grid>
+          {menuItems.length ? (
+            <Grid className={styles.children}>{children}</Grid>
+          ) : (
+            <Loading />
           )}
         </Grid>
-        {menuItems.length && (
-          <Grid className={styles.children}>{children}</Grid>
-        )}
       </Grid>
-    </Grid>
+      <>
+        <SwipeableDrawer
+          anchor="right"
+          open={open}
+          onClose={handleDrawerClose}
+          onOpen={handleDrawerClose}
+        >
+          <Navbar menuItems={menuItems} className={styles.navbarCell} />
+        </SwipeableDrawer>
+      </>
+    </>
   )
 }
 

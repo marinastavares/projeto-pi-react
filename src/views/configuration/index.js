@@ -21,12 +21,14 @@ import { Link } from '@reach/router'
 
 import { getAllLabs } from 'modules/labs/actions'
 import { changeStatusDME } from 'modules/dme/actions'
+import { useWindowSize } from 'utils/hooks'
 
 import useStyles from './styles'
 
-const GeneralView = () => {
+const Configuration = () => {
   const styles = useStyles()
   const allLabs = useSelector((state) => state.dme.listAllLabs)
+  const { isTablet } = useWindowSize()
 
   const dispatch = useDispatch()
 
@@ -45,7 +47,12 @@ const GeneralView = () => {
   }, [dispatch])
   return (
     <Grid className={styles.container}>
-      <Grid container alignItems="center" justify="space-between">
+      <Grid
+        container
+        alignItems="center"
+        justify="space-between"
+        direction={isTablet ? 'column-reverse' : 'row'}
+      >
         <Typography color="secondary" variant="h6" className={styles.title}>
           Ambientes com os todos os idDMEs
         </Typography>
@@ -145,4 +152,4 @@ const GeneralView = () => {
   )
 }
 
-export default GeneralView
+export default Configuration

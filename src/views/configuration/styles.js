@@ -10,6 +10,10 @@ export default makeStyles((theme) => ({
   },
   title: {
     margin: theme.spacing(4, 0, 2),
+
+    [theme.breakpoints.down('sm')]: {
+      margin: '16px 0',
+    },
   },
   primary: {
     backgroundColor: theme.palette.primary.main,

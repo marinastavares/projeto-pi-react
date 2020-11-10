@@ -5,6 +5,7 @@ import FlashOnIcon from '@material-ui/icons/FlashOn'
 import { useDispatch, useSelector } from 'react-redux'
 import format from 'date-fns/format'
 
+import MultipleChart from 'components/weekday-charts'
 import {
   getMostEnergy,
   getEnergyAverage,
@@ -22,22 +23,13 @@ import {
 } from 'modules/energy/actions'
 import { energySelector } from 'modules/energy/selectors'
 import { allQueriesSelector } from 'modules/labs/selectors'
-import { useOnSuccessCall } from 'utils/hooks'
+import { useOnSuccessCall, useWindowSize } from 'utils/hooks'
+import { QUERIES } from 'utils/helpers'
 import CardInfo from 'components/card-info'
-import LineChart from 'components/line-chart'
 import DonutChart from 'components/donut-chart'
 import ColumnChart from 'components/column-chart'
 
 import useStyles from './styles'
-
-const QUERIES = {
-  TOTAL_ENERGY_MONTH: 'totalEnergyMonth',
-  AVERAGE: 'average',
-  PEAK_OF_CURRENT: 'peakOfCurrent',
-  WEEKLY_ENERGY: 'weeklyEnergy',
-  SUM_POTENCY: 'sumPotency',
-  POTENCY_WEEKLY: 'potencyWeekly',
-}
 
 const GeneralView = () => {
   const styles = useStyles()
@@ -52,6 +44,7 @@ const GeneralView = () => {
   } = useSelector(energySelector)
   const dispatch = useDispatch()
   const allQueries = useSelector(allQueriesSelector)
+  const { isMobile } = useWindowSize()
 
   useEffect(() => {
     dispatch(getMostEnergy())
@@ -76,24 +69,21 @@ const GeneralView = () => {
     }
     dispatch(getWeeklyEnergy())
   }, [allQueries, dispatch])
-  const sumHourAction = useCallback(() => {
-    if (allQueries?.[QUERIES.WEEKLY_ENERGY]) {
-      return
-    }
-    dispatch(getSumHour())
-  }, [allQueries, dispatch])
   const porcentualLab = useCallback(() => {
-    if (allQueries?.[QUERIES.SUM_POTENCY]) {
+    if (allQueries?.[QUERIES.WEEKLY_ENERGY]) {
       return
     }
     dispatch(getPorcentualLab())
   }, [allQueries, dispatch])
-  const weeklyPorcentualAction = useCallback(() => {
-    if (allQueries?.[QUERIES.POTENCY_WEEKLY]) {
+  const sumHourAction = useCallback(() => {
+    if (allQueries?.[QUERIES.PERCENTAGE_ENERGY]) {
       return
     }
-    dispatch(getWeeklyPorcentual())
+    dispatch(getSumHour())
   }, [allQueries, dispatch])
+  const weeklyPorcentualAction = useCallback(() => {
+    dispatch(getWeeklyPorcentual())
+  }, [dispatch])
 
   const [isUsedLoading] = useOnSuccessCall(GET_ENERGY.ACTION, averageAction)
   const [isAverageLoading] = useOnSuccessCall(
@@ -116,16 +106,6 @@ const GeneralView = () => {
     GET_SUM_HOUR.ACTION,
     weeklyPorcentualAction
   )
-
-  const series = sumPotency.map((value) => ({
-    name: value.title.toUpperCase(),
-    data: value.value,
-  }))
-
-  const seriesWeekday = potWeekday.map((value) => ({
-    name: value.title,
-    data: value.value,
-  }))
 
   return (
     <Grid className={styles.container}>
@@ -200,7 +180,8 @@ const GeneralView = () => {
         isLoading={weeklyEnergy?.length === 0 || isWeeklyEnergyLoading}
         hasTime
         name={QUERIES.WEEKLY_ENERGY}
-        action={getSumHour}
+        action={getWeeklyEnergy}
+        isWeekly
       >
         <ColumnChart value={weeklyEnergy} />
       </CardInfo>
@@ -208,7 +189,8 @@ const GeneralView = () => {
         title="Porcentagem de energia consumida"
         isLoading={porcentual?.length === 0 || isPorcentualLoading}
         hasTime
-        name="porcentual"
+        name={QUERIES.PERCENTAGE_ENERGY}
+        action={getPorcentualLab}
       >
         <DonutChart
           height={280}
@@ -220,31 +202,32 @@ const GeneralView = () => {
       <CardInfo
         title="Soma das potências por dia da semana"
         className={styles.graphComplete}
-        isLoading={sumPotency?.length === 0 || isPorcentualLoading}
+        isLoading={sumPotency?.length === 0 || isWeeklyPorcentualLoading}
         isWeekly
         name={QUERIES.SUM_POTENCY}
-        action={getPorcentualLab}
+        action={getSumHour}
+        noGrid
+        containerClassName={styles.lineGraph}
       >
-        <LineChart
-          height={250}
-          width={700}
-          XValues={sumPotency[0]?.date}
-          YValues={series}
+        <MultipleChart
+          dataValues={Object.values(sumPotency)}
+          isMobile={isMobile}
         />
       </CardInfo>
       <CardInfo
         title="Potência da semana"
         className={styles.graphComplete}
-        isLoading={sumPotency?.length === 0 || isWeeklyPorcentualLoading}
+        isLoading={sumPotency?.length === 0}
         isWeekly
         name={QUERIES.POTENCY_WEEKLY}
         action={getWeeklyPorcentual}
+        noGrid
+        containerClassName={styles.lineGraph}
       >
-        <LineChart
-          height={250}
-          width={700}
-          XValues={potWeekday[0]?.date}
-          YValues={seriesWeekday}
+        <MultipleChart
+          isString
+          dataValues={Object.values(potWeekday)}
+          isMobile={isMobile}
         />
       </CardInfo>
     </Grid>

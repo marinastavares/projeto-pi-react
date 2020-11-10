@@ -19,7 +19,7 @@ import {
 } from 'modules/dme/actions'
 import { dmeSelector, hasChangedSelector } from 'modules/dme/selectors'
 import { labsSelector } from 'modules/labs/selectors'
-import { useOnSuccessCall } from 'utils/hooks'
+import { useOnSuccessCall, useWindowSize } from 'utils/hooks'
 import CardInfo from 'components/card-info'
 import DonutChart from 'components/donut-chart'
 import ColumnChart from 'components/column-chart'
@@ -43,6 +43,7 @@ const DMEView = () => {
   const dispatch = useDispatch()
   const { lab } = useParams()
   const [value, setValue] = useState(0)
+  const { isMobile } = useWindowSize()
 
   const handleChange = useCallback((event, newValue) => {
     setValue(newValue)
@@ -86,7 +87,11 @@ const DMEView = () => {
 
   const renderContent = useMemo(() => {
     if (currentDME?.disabled) {
-      return <Typography color="secondary">DME desativado</Typography>
+      return (
+        <Typography color="secondary">
+          Não foi possível adquirir dados do DME
+        </Typography>
+      )
     }
 
     if (isLoading) {
@@ -156,6 +161,7 @@ const DMEView = () => {
           containerClassName={styles.content}
         >
           <MultipleLineChart
+            isMobile={isMobile}
             phaseOne={currentDME?.current?.['1']?.map((current) => ({
               x: new Date(current.dateA),
               y: current.valueA,
@@ -179,6 +185,7 @@ const DMEView = () => {
           containerClassName={styles.content}
         >
           <MultipleLineChart
+            isMobile={isMobile}
             phaseOne={currentDME?.voltage?.['1']?.map((current) => ({
               x: new Date(current.dateV),
               y: current.valueV,
@@ -202,6 +209,7 @@ const DMEView = () => {
           containerClassName={styles.content}
         >
           <MultipleLineChart
+            isMobile={isMobile}
             phaseOne={currentDME?.potency?.['1']?.map((potency) => ({
               x: new Date(potency.dateW),
               y: potency.valueW,
@@ -225,6 +233,7 @@ const DMEView = () => {
           containerClassName={styles.content}
         >
           <MultipleLineChart
+            isMobile={isMobile}
             phaseOne={currentDME?.energy?.['1']?.map((energy) => ({
               x: new Date(energy.dateE),
               y: energy.valueE,

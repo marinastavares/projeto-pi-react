@@ -3,6 +3,9 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import ReactApexChart from 'react-apexcharts'
 
+import { useWindowSize } from 'utils/hooks'
+
+
 import useStyles from './styles'
 
 const INITIAL_VALUES = new Array(7).fill(0).map((value, index) => index + 1)
@@ -14,6 +17,8 @@ INITIAL_VALUES.map((value) => {
 })
 const ColumnChart = ({ value, isPhaseGraph }) => {
   const styles = useStyles()
+  const {isMobile} = useWindowSize()
+
   const currentValues = useMemo(() => {
     if (isPhaseGraph) {
       return value
@@ -111,6 +116,8 @@ const ColumnChart = ({ value, isPhaseGraph }) => {
     }),
     [isPhaseGraph]
   )
+
+  const mobileSize = isMobile ? 250 : 450
   return (
     <ReactApexChart
       series={
@@ -126,7 +133,7 @@ const ColumnChart = ({ value, isPhaseGraph }) => {
       options={options.options}
       type="bar"
       height={isPhaseGraph ? 200 : 250}
-      width={isPhaseGraph ? 200 : 450}
+      width={isPhaseGraph ? 200 : mobileSize}
       className={styles.background}
     />
   )

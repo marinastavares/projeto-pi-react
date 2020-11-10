@@ -1,15 +1,21 @@
 import { makeStyles } from '@material-ui/styles'
 
-export default makeStyles(({ palette }) => ({
+export default makeStyles(({ palette, breakpoints }) => ({
   container: {
     display: 'grid',
     gridTemplateRows: '60px 250px 300px 300px 300px 300px',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '24px',
     height: '100%',
+    [breakpoints.down('sm')]: {
+      gridTemplateColumns: '1fr',
+      gridTemplateRows: '60px 250px 300px 500px 500px 500px 500px 500px',
+    },
   },
   tabs: {
-    gridColumn: '1 / 4',
+    [breakpoints.up('sm')]: {
+      gridColumn: '1 / 4',
+    },
     borderBottom: `0`,
 
     '& .PrivateTabIndicator-colorSecondary-342': {
@@ -49,14 +55,19 @@ export default makeStyles(({ palette }) => ({
     justifyContent: 'center',
   },
   graph: {
-    gridColumn: '1 / 3',
+    [breakpoints.up('sm')]: {
+      gridColumn: '1 / 3',
+    },
   },
   graphComplete: {
-    gridColumn: '1 / 4',
+    [breakpoints.up('sm')]: {
+      gridColumn: '1 / 4',
+    },
   },
   content: {
-    marginLeft: '72px',
-
+    [breakpoints.up('sm')]: {
+      marginLeft: '72px',
+    },
   },
   background: {
     '& .apexcharts-canvas.apexcharts-theme-dark': {

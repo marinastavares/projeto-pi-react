@@ -1,15 +1,26 @@
 import { makeStyles } from '@material-ui/styles'
 
-export default makeStyles((theme) => ({
+export default makeStyles(({ palette, breakpoints }) => ({
   container: {
     display: 'grid',
-    gridTemplateRows: '200px 300px 350px 350px',
+    gridTemplateRows: '60px 250px 300px 300px 300px 300px',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '24px',
     height: '100%',
-    [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '1fr',
-      gridTemplateRows: '200px 200px 200px 300px 300px 500px 500px'
+  },
+  tabs: {
+    gridColumn: '1 / 4',
+    borderBottom: `0`,
+
+    '& .PrivateTabIndicator-colorSecondary-342': {
+      backgroundColor: palette.primary.main,
+    },
+  },
+  tab: {
+    '& .MuiTab-wrapper': {
+      color: palette.secondary.main,
+      textTransform: 'capitalize',
+      fontSize: '16px',
     },
   },
   card: {
@@ -38,25 +49,24 @@ export default makeStyles((theme) => ({
     justifyContent: 'center',
   },
   graph: {
-    [theme.breakpoints.up('sm')]: {
-      gridColumn: '1 / 3',
-    },
+    gridColumn: '1 / 3',
   },
   graphComplete: {
-    [theme.breakpoints.up('sm')]: {
-      gridColumn: '1 / 4',
-    },
+    gridColumn: '1 / 4',
+  },
+  content: {
+    marginLeft: '72px',
   },
   background: {
     '& .apexcharts-canvas.apexcharts-theme-dark': {
       background: 'transparent',
     },
   },
-  lineGraph: {
-    paddingLeft: '72px',
-    paddingTop: '8px',
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: '8px',
+  loading: {
+    margin: '0 150px',
+
+    [breakpoints.down('sm')]: {
+      margin: '0 auto',
     },
   },
 }))

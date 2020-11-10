@@ -20,6 +20,7 @@ import isValid from 'date-fns/isValid'
 import isSameDay from 'date-fns/isSameDay'
 import endOfWeek from 'date-fns/endOfWeek'
 import startOfWeek from 'date-fns/startOfWeek'
+import addDays from 'date-fns/addDays'
 import isWithinInterval from 'date-fns/isWithinInterval'
 import { useDispatch } from 'react-redux'
 
@@ -51,6 +52,7 @@ const TimeModal = ({
 
   const handleWeek = useCallback((date) => {
     setWeek(startOfWeek(makeJSDateObject(date)))
+    handleInitialDateChange(date)
   }, [])
 
   const renderDay = useCallback(
@@ -104,11 +106,12 @@ const TimeModal = ({
   }, [])
 
   const onSaveClick = useCallback(() => {
+    console.log(week, isWeekly ? week.toISOString() : initialDate.toISOString())
     dispatch(
       setCustomQuery({
         name,
         initialDate: initialDate.toISOString(),
-        finalDate: finalDate.toISOString(),
+        finalDate: isWeekly ? addDays(initialDate, 7).toISOString() : finalDate.toISOString(),
       })
     )
     onClose()

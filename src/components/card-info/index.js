@@ -28,6 +28,8 @@ const CardInfo = ({
   const [isModalTime, setModal] = useModal()
   const currentQuery = useSelector((state) => state.labs.allQueries[name])
 
+
+  const result = isWeekly ? 'Filtro da última semana' : 'Filtro das últimas 24h'
   return (
     <>
       <Paper variant="outlined" className={classnames(styles.card, className)}>
@@ -41,7 +43,7 @@ const CardInfo = ({
             >
               {title}
             </Typography>
-            {hasTime && (
+            {(isWeekly || hasTime) && (
               <Typography
                 className={styles.filterLabel}
                 component="span"
@@ -56,7 +58,7 @@ const CardInfo = ({
                       new Date(currentQuery?.finalDate),
                       'dd/MM/yyyy'
                     )}`
-                  : 'Filtro das últimas 24h'}
+                  : result}
               </Typography>
             )}
           </Grid>

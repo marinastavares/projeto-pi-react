@@ -15,6 +15,7 @@ class App extends Component {
     phaseTwo: PropTypes.arrayOf(PropTypes.shape({})),
     phaseThree: PropTypes.arrayOf(PropTypes.shape({})),
     unit: PropTypes.string,
+    isMobile: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -22,6 +23,7 @@ class App extends Component {
     phaseTwo: [],
     phaseThree: [],
     unit: '',
+    isMobile: false,
   }
 
   constructor(props) {
@@ -44,8 +46,8 @@ class App extends Component {
       backgroundColor: '#20263C',
       animationEnabled: true,
       zoomEnabled: true,
-      height: 250,
-      width: 700,
+      width: this.props.isMobile ? 320 : 700,
+      height: this.props.isMobile ? 350 : 250,
       // title: {
       //   text: 'Units Sold VS Profit',
       //   fontFamily: 'Nunito',

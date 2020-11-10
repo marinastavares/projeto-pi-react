@@ -56,12 +56,17 @@ const energy = createReducer(INITIAL_STATE, {
       previousState.peakCurrent = payload
     }),
   [GET_SUM_HOUR.FULFILLED]: (state, { payload }) => {
-    const orderPayload = payload.sort(
-      (A, B) => new Date(A.date) - new Date(B.date)
-    )
+    const orderPayload = payload
+      .sort((A, B) => new Date(A.date) - new Date(B.date))
+      .map((value) => ({
+        ...value,
+        name: `${value.lab}-${value.ponto}`,
+        x: new Date(value.date),
+        y: value.wTotal,
+      }))
     const group = orderPayload.reduce((res, obj) => {
       // for each object obj in the array arr
-      const key = obj.lab // let key be the concatination of locA and locB
+      const key = obj.name // let key be the concatination of locA and locB
       const newObj = obj // create a new object based on the object obj
       if (res[key])
         // if res has a sub-array for the current key then...
@@ -71,13 +76,7 @@ const energy = createReducer(INITIAL_STATE, {
       return res
     }, {})
     return produce(state, (previousState) => {
-      previousState.sumPotency = Object.entries(group).map((values) => ({
-        title: values[0],
-        date: values[1].map((value) => {
-          return format(new Date(value.date), 'dd/M hh:mm')
-        }),
-        value: values[1].map((value) => value.wTotal),
-      }))
+      previousState.sumPotency = group
     })
   },
   [GET_PORCENTUAL_LAB.FULFILLED]: (state, { payload }) =>
@@ -89,9 +88,14 @@ const energy = createReducer(INITIAL_STATE, {
       previousState.weeklyEnergy = payload
     }),
   [GET_WEEKLY_PORCENTUAL.FULFILLED]: (state, { payload }) => {
-    const orderPayload = payload.sort(
-      (A, B) => new Date(A.date) - new Date(B.date)
-    )
+    const orderPayload = payload
+      .sort((A, B) => new Date(A.date) - new Date(B.date))
+      .map((value) => ({
+        ...value,
+        name: WEEKDAYS[value.dayOfWeek],
+        x: Number(format(new Date(value.date), 'HH')),
+        y: value.wAvg,
+      }))
     const group = orderPayload.reduce((res, obj) => {
       // for each object obj in the array arr
       const key = obj.dayOfWeek // let key be the concatination of locA and locB
@@ -104,15 +108,7 @@ const energy = createReducer(INITIAL_STATE, {
       return res
     }, {})
     return produce(state, (previousState) => {
-      previousState.potWeekday = Object.entries(group).map((values) => {
-        return {
-          title: WEEKDAYS[values[0]],
-          date: values[1].map((value) => {
-            return format(new Date(value.date), 'hh:mm')
-          }),
-          value: values[1].map((value) => value.wAvg),
-        }
-      })
+      previousState.potWeekday = group
     })
   },
 })
