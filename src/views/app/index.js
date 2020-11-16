@@ -74,9 +74,9 @@ const App = ({ children }) => {
   const [isLoggedIn] = useLocalStorage('isLoggedIn')
   const [open, setOpen] = useState(false)
 
-  const handleDrawerClose = () => {
+  const handleDrawerClose = useCallback(() => {
     setOpen((prevState) => !prevState)
-  }
+  }, [])
 
   const handleClick = useCallback(
     (event) => {
@@ -129,7 +129,7 @@ const App = ({ children }) => {
       icon: <DashboardIcon className={styles.iconHeader} color="secondary" />,
       title: 'Dashboard',
     }
-  }, [location.pathname, menuItems?.find, styles.iconHeader])
+  }, [location.pathname, menuItems, styles.iconHeader])
 
   useEffect(() => {
     dispatch(getLabs())
@@ -162,7 +162,16 @@ const App = ({ children }) => {
           </Typography>
         </Toolbar>
       </AppBar>
-
+      <>
+        <SwipeableDrawer
+          anchor="right"
+          open={open}
+          onClose={handleDrawerClose}
+          onOpen={handleDrawerClose}
+        >
+          <Navbar menuItems={menuItems} className={styles.navbarCell} />
+        </SwipeableDrawer>
+      </>
       <Grid container className={styles.container}>
         <Navbar menuItems={menuItems} className={styles.navbar} />
         <Grid className={styles.content}>
@@ -239,16 +248,6 @@ const App = ({ children }) => {
           )}
         </Grid>
       </Grid>
-      <>
-        <SwipeableDrawer
-          anchor="right"
-          open={open}
-          onClose={handleDrawerClose}
-          onOpen={handleDrawerClose}
-        >
-          <Navbar menuItems={menuItems} className={styles.navbarCell} />
-        </SwipeableDrawer>
-      </>
     </>
   )
 }

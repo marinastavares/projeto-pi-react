@@ -19,7 +19,7 @@ import {
 } from 'modules/dme/actions'
 import { dmeSelector, hasChangedSelector } from 'modules/dme/selectors'
 import { labsSelector } from 'modules/labs/selectors'
-import { useOnSuccessCall, useWindowSize } from 'utils/hooks'
+import { useOnSuccessCall, useWindowSize, usePrevious } from 'utils/hooks'
 import CardInfo from 'components/card-info'
 import DonutChart from 'components/donut-chart'
 import ColumnChart from 'components/column-chart'
@@ -42,6 +42,7 @@ const DMEView = () => {
   const hasChanged = useSelector(hasChangedSelector)
   const dispatch = useDispatch()
   const { lab } = useParams()
+  const prevLab = usePrevious(lab)
   const [value, setValue] = useState(0)
   const { isMobile } = useWindowSize()
 
@@ -262,10 +263,18 @@ const DMEView = () => {
     currentDME?.potency,
     currentDME?.voltage,
     isLoading,
+    isMobile,
     listDMEs,
+    styles.content,
     styles.graphComplete,
     styles.loading,
   ])
+
+  useEffect(() => {
+    if (lab !== prevLab) {
+      setValue(0)
+    }
+  }, [lab, prevLab])
 
   return (
     <Grid className={styles.container}>

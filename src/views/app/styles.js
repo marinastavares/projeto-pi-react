@@ -57,9 +57,10 @@ export default makeStyles(({ palette, breakpoints }) => ({
   },
   menu: {
     '& .MuiMenuItem-root': {
-      backgroundColor: 'white',
+      backgroundColor: '#20263C',
     },
   },
+
   selectButton: {
     border: `2.5px solid ${palette.secondary.main}`,
     fontWeight: '500',
@@ -79,7 +80,7 @@ export default makeStyles(({ palette, breakpoints }) => ({
     color: palette.secondary.main,
   },
   menuItem: {
-    backgroundColor: 'white',
+    backgroundColor: '#20263C',
 
     '&:hover': {
       backgroundColor: palette.secondary.dark,
@@ -119,20 +120,17 @@ export default makeStyles(({ palette, breakpoints }) => ({
     },
   },
   navbarCell: {
-    zIndex: 20,
-    height: '100%',
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    overflowX: 'hidden',
-    width: '260px',
-
     '& .MuiAppBar-positionFixed': {
-      left: 0,
-      right: 'auto',
-
       [breakpoints.down('sm')]: {
+        zIndex: 170000,
+        height: '100%',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        overflowX: 'hidden',
+        width: '260px',
         bottom: 0,
+        right: 'auto',
       },
     },
   },

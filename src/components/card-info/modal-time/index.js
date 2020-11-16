@@ -106,17 +106,18 @@ const TimeModal = ({
   }, [])
 
   const onSaveClick = useCallback(() => {
-    console.log(week, isWeekly ? week.toISOString() : initialDate.toISOString())
     dispatch(
       setCustomQuery({
         name,
         initialDate: initialDate.toISOString(),
-        finalDate: isWeekly ? addDays(initialDate, 7).toISOString() : finalDate.toISOString(),
+        finalDate: isWeekly
+          ? addDays(initialDate, 7).toISOString()
+          : finalDate.toISOString(),
       })
     )
     onClose()
     dispatch(action())
-  }, [action, dispatch, finalDate, initialDate, name, onClose])
+  }, [action, dispatch, finalDate, initialDate, isWeekly, name, onClose])
 
   return (
     <Dialog

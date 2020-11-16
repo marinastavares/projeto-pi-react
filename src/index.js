@@ -15,7 +15,6 @@ import theme from 'styles/material-ui'
 import rootReducer from 'modules/reducers'
 import App from 'views/app'
 import General from 'views/general'
-import Info from 'views/info'
 import DME from 'views/dme'
 import RegisterLocation from 'views/location'
 import Configuration from 'views/configuration'
@@ -48,7 +47,6 @@ ReactDOM.render(
       <SnackbarProvider>
         <Router>
           <App path="/">
-            <Info path="/modulo" />
             <General path="/" />
             <DME path="/:lab" />
             <Configuration path="/admin" />
