@@ -123,7 +123,7 @@ const Configuration = () => {
                       />
                       <ListItemSecondaryAction>
                         <Tooltip
-                          title={dme.status ? 'Desativar DME' : 'AtiVar DME'}
+                          title={dme.status ? 'Desativar DME' : 'Ativar DME'}
                         >
                           <IconButton
                             color="secondary"

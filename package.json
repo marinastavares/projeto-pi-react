@@ -59,6 +59,7 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
+    "server": "craco server",
     "test": "craco test",
     "eject": "craco eject",
     "lint": "./node_modules/.bin/eslint ."

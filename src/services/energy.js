@@ -11,5 +11,4 @@ export const getPeakCurrent = (params) => get()('peak_current/', params)
 export const getSumHour = (params) => get()('sum/hour/', params)
 export const getPorcentualLab = (params) => get()('energy/lab/', params)
 export const getWeeklyEnergy = (params) => get()('energy/dayOfWeek/', params)
-export const getWeeklyPorcentual = (params) =>
-  console.log(params) || get()('pot_weekday/', params)
+export const getWeeklyPorcentual = (params) => get()('pot_weekday/', params)

@@ -186,6 +186,7 @@ const TimeModal = ({
                 maxDate={finalDate}
                 maxDateMessage="Data inicial deve ser antes da final"
                 variant="inline"
+                autoOk
               />
               <DatePicker
                 format="dd/MM/yyyy"
@@ -200,6 +201,7 @@ const TimeModal = ({
                 variant="inline"
                 minDate={initialDate}
                 minDateMessage="Data final deve ser depois da inicial"
+                autoOk
               />
             </>
           )}
