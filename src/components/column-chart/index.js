@@ -5,7 +5,6 @@ import ReactApexChart from 'react-apexcharts'
 
 import { useWindowSize } from 'utils/hooks'
 
-
 import useStyles from './styles'
 
 const INITIAL_VALUES = new Array(7).fill(0).map((value, index) => index + 1)
@@ -17,14 +16,14 @@ INITIAL_VALUES.map((value) => {
 })
 const ColumnChart = ({ value, isPhaseGraph }) => {
   const styles = useStyles()
-  const {isMobile} = useWindowSize()
+  const { isMobile } = useWindowSize()
 
   const currentValues = useMemo(() => {
     if (isPhaseGraph) {
       return value
     }
     value.map((energy) => {
-      WEEK_ARRAY[energy.id] = energy.totalEnergy.toFixed(2)
+      WEEK_ARRAY[energy.id] = energy.totalEnergy?.toFixed(2)
       return null
     })
     return Object.values(WEEK_ARRAY)

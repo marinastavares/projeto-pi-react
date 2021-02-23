@@ -119,7 +119,7 @@ const GeneralView = () => {
       >
         <FlashOnIcon color="primary" className={styles.icon} />
         <Typography component="p" variant="h2" color="secondary">
-          {totalEnergyMonth.toFixed(2)} kWh
+          {totalEnergyMonth?.toFixed(2)} kWh
         </Typography>
       </CardInfo>
       <CardInfo
@@ -132,7 +132,7 @@ const GeneralView = () => {
       >
         <FlashOnIcon color="primary" className={styles.icon} />
         <Typography component="p" variant="h1" color="secondary">
-          {average?.toFixed(2)} kWh
+          {average??.toFixed(2)} kWh
         </Typography>
       </CardInfo>
       <CardInfo
